@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
+import { StylesProvider } from '@material-ui/styles';
+import Button from "@material-ui/core/Button";
 
 class App extends Component {
 
@@ -14,7 +16,9 @@ class App extends Component {
 
   render() {
     return (
-      <h1>TEST</h1>
+      <StylesProvider injectFirst>
+        <Button> I am a Button </Button>
+      </StylesProvider>
     );
   }
 }

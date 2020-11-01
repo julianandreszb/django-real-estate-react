@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack --mode development --config webpack.config.js",
-    "build": "webpack --mode production --config webpack.config.js"
+    "dev": "webpack --config webpack.config.js",
+    "build": "webpack --config webpack.config.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,10 @@
     "webpack": "^5.3.2",
     "webpack-cli": "^4.1.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "styled-components": "^5.2.1",
+    "@material-ui/styles": "latest"
+  },
   "description": ""
 }
