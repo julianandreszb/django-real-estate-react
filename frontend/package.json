@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
-    "styled-components": "^5.2.1",
-    "@material-ui/styles": "latest"
+    "@material-ui/styles": "latest",
+    "styled-components": "^5.2.1"
   },
   "description": ""
 }
