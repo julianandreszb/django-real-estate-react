@@ -7,19 +7,49 @@ import theme from './theme';
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from '@material-ui/icons/Menu';
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import AppBar from "@material-ui/core/AppBar";
 
 const StyledButton = styled(Button)`
   color: ${props => props.theme.palette.primary.main};
   background: black
 `;
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
+
 const App = () => {
 
     const [data, setData] = useState([]);
 
+    const classes = useStyles(theme);
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
+            <AppBar position="static">
+              <Toolbar>
+                {/*<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">*/}
+                {/*  <MenuIcon />*/}
+                {/*</IconButton>*/}
+                <Typography variant="h6" className={classes.title}>
+                  News
+                </Typography>
+                <Button color="inherit">Login</Button>
+              </Toolbar>
+            </AppBar>
             <Container maxWidth="sm">
                 <Box my={4}>
                     <Typography variant="h4" component="h1" gutterBottom>
