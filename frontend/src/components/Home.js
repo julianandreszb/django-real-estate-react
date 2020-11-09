@@ -15,20 +15,19 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 /**
  * @return {null}
  */
-function Home(props) {
+export default function(props) {
 
-    console.log(props.currentWindowName);
-    console.log(props.theme);
-
-    const theme = props.theme;
+    console.log('frontend/src/components/Home.js.props', props);
 
     if (props.currentWindowName !== HOME_WINDOW_NAME) {
         return null;
     }
 
-    // const [appTitle, setAppTitle] = useState('RealState');
+    const theme = props.theme;
 
-    const StyledButton = styled(Button, props)`
+    const [appTitle, setAppTitle] = useState('RealState');
+
+    const StyledButton = styled(Button)`
       color: ${() => theme.palette.primary.main};
       background: black
     `;
@@ -53,7 +52,7 @@ function Home(props) {
                     <MenuIcon/>
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
-                    {/*{appTitle}*/}
+                    {appTitle}
                 </Typography>
                 <Button color="inherit">Login</Button>
             </Toolbar>
@@ -69,5 +68,3 @@ function Home(props) {
         </Container>
     </>
 }
-
-export default Home;
