@@ -1,6 +1,7 @@
 from django.shortcuts import render
+from oauth2_provider.decorators import protected_resource
 
 
-# Create your views here.
+@protected_resource()
 def index(request):
-    return None
+    return render(request, 'frontend/index.html')

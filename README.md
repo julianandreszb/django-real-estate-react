@@ -15,3 +15,7 @@ Material UI and Styled Components
 
 TODO: Hooks are a new addition in React 16.8. They let you use state and other React features without writing a class.
  https://codesandbox.io/s/github/mui-org/material-ui/tree/master/examples/create-react-app?file=/src/index.js
+ 
+ OAuth2
+  * https://django-oauth-toolkit.readthedocs.io/en/latest/rest-framework/getting_started.html#step-1-minimal-setup
+ *  https://django-oauth-toolkit.readthedocs.io/en/latest/views/function_based.html
