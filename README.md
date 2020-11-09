@@ -19,3 +19,6 @@ TODO: Hooks are a new addition in React 16.8. They let you use state and other R
  OAuth2
   * https://django-oauth-toolkit.readthedocs.io/en/latest/rest-framework/getting_started.html#step-1-minimal-setup
  *  https://django-oauth-toolkit.readthedocs.io/en/latest/views/function_based.html
+ 
+ Forms:
+ https://medium.com/codefully-io/react-forms-validation-with-formik-and-material-ui-1adf0c1cae5c

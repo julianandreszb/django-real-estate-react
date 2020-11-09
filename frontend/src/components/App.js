@@ -6,16 +6,20 @@ import Home from './Home.js';
 import  * as Constants from './Constants';
 
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import SignUp from "./SignUp";
 
 const App = () => {
 
-    const [data, setData] = useState([]);
     const [currentWindowName, setCurrentWindowName] = useState(Constants.HOME_WINDOW_NAME);
+    const classes = {
+        textField: 'myTextFieldClass'
+    };
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
             <Home theme={theme} currentWindowName={currentWindowName} />
+            <SignUp classes={classes} currentWindowName={currentWindowName} />
         </ThemeProvider>
     );
 };
