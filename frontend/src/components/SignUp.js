@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
  */
 function SignUp(props) {
 
-    if (props.currentWindowName !== SIGN_UP_WINDOW_NAME) {
+    if (props.currentComponentName !== SIGN_UP_WINDOW_NAME) {
         return null;
     }
 

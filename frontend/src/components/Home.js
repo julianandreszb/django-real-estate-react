@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import React, {useState} from "react";
-import {HOME_WINDOW_NAME} from './Constants'
+import * as Constants from './Constants'
 import styled from "styled-components";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -20,7 +20,7 @@ export default function (props) {
 
     console.log('frontend/src/components/Home.js.props', props);
 
-    if (props.currentWindowName !== HOME_WINDOW_NAME) {
+    if (props.currentComponentName !== Constants.HOME_WINDOW_NAME) {
         return null;
     }
 
@@ -46,6 +46,10 @@ export default function (props) {
 
     const classes = useStyles(props.theme);
 
+    function onClickLoginButton() {
+        props.onCurrentComponentNameChange(Constants.SIGN_UP_WINDOW_NAME);
+    }
+
     return <>
         <CssBaseline/>
         <AppBar position="static">
@@ -56,7 +60,7 @@ export default function (props) {
                 <Typography variant="h6" className={classes.title}>
                     {appTitle}
                 </Typography>
-                <Button color="inherit">Login</Button>
+                <Button onClick={onClickLoginButton} color="inherit">Login</Button>
             </Toolbar>
         </AppBar>
         <Container maxWidth="sm">
