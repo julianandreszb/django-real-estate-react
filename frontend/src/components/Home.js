@@ -10,12 +10,13 @@ import React, {useState} from "react";
 import {HOME_WINDOW_NAME} from './Constants'
 import styled from "styled-components";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
 
 /**
  * @return {null}
  */
-export default function(props) {
+export default function (props) {
 
     console.log('frontend/src/components/Home.js.props', props);
 
@@ -46,6 +47,7 @@ export default function(props) {
     const classes = useStyles(props.theme);
 
     return <>
+        <CssBaseline/>
         <AppBar position="static">
             <Toolbar>
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">

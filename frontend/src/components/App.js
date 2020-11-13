@@ -1,25 +1,26 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from './theme';
-import Home from './Home.js';
 import  * as Constants from './Constants';
-
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
+// import { Provider } from 'react-redux'
+// import store from './redux/store'
+import Home from './Home.js';
 import SignUp from "./SignUp";
+
 
 const App = () => {
 
-    const [currentWindowName, setCurrentWindowName] = useState(Constants.HOME_WINDOW_NAME);
+    const [currentWindowName, setCurrentWindowName] = useState(Constants.SIGN_UP_WINDOW_NAME);
     const classes = {
         textField: 'myTextFieldClass'
     };
 
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline/>
-            <Home theme={theme} currentWindowName={currentWindowName} />
-            <SignUp classes={classes} currentWindowName={currentWindowName} />
+            <Home theme={theme} currentWindowName={currentWindowName}/>
+            <SignUp classes={classes} currentWindowName={currentWindowName}/>
         </ThemeProvider>
     );
 };
