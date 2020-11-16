@@ -1,7 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useForm} from "react-hook-form";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -16,6 +14,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
+import axios from 'axios';
+import * as Constants from './Constants'
+import {getCookie} from './Utils';
+import DialogLoading from './molecules/dialog/Dialog'
 
 
 function Copyright() {
@@ -73,7 +75,36 @@ function SignUp(props) {
         resolver: yupResolver(schema)
     });
 
-    const onSubmit = data => console.log(data);
+    const onCloseDialogLoading = () => {
+    };
+    const [openDialogLoading, setOpenDialogLoading] = useState(false);
+
+    const onSubmit = data => {
+
+        setOpenDialogLoading(true);
+
+        // axios({
+        //     method: 'post',
+        //     url: Constants.URL_USER_CREATE,
+        //     data: {
+        //         username: data.email,
+        //         first_name: data.firstName,
+        //         last_name: data.lastName,
+        //         email: data.email
+        //     },
+        //     headers: {
+        //         'X-CSRFToken': getCookie('csrftoken')
+        //     }
+        // }).then(response => {
+        //     console.log('response', response);
+        // }).catch(function (error) {
+        //     console.log(error);
+        // }).finally(function () {
+        //     setTimeout(() => { setOpenDialogLoading(false); }, 2000);
+        // });
+    };
+
+
 
     return <Container component="main" maxWidth="xs">
         <CssBaseline/>
@@ -143,14 +174,8 @@ function SignUp(props) {
                             helperText={errors.password?.message}
                         />
                     </Grid>
-                    <Grid item xs={12}>
-                        <FormControlLabel
-                            control={<Checkbox value="allowExtraEmails" color="primary"/>}
-                            label="I want to receive inspiration, marketing promotions and updates via email."
-                        />
-                    </Grid>
                 </Grid>
-                <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} >
+                <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                     Sign Up
                 </Button>
                 <Grid container justify="flex-end">
@@ -165,6 +190,7 @@ function SignUp(props) {
         <Box mt={5}>
             <Copyright/>
         </Box>
+        <DialogLoading dialogContentText={Constants.MESSAGE_CREATING_NEW_USER} onClose={onCloseDialogLoading} open={openDialogLoading} />
     </Container>
 }
 
