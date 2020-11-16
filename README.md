@@ -28,3 +28,10 @@ ES6 syntax and feature overview:
 https://www.taniarascia.com/es6-syntax-and-feature-overview/
 
 https://reactjs.org/docs/lifting-state-up.html
+
+- react router
+
+- https://reactjs.org/docs/faq-structure.html
+
+react-atomic-design:
+https://github.com/danilowoz/react-atomic-design
