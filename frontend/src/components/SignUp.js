@@ -17,7 +17,7 @@ import Link from "@material-ui/core/Link";
 import axios from 'axios';
 import * as Constants from './Constants'
 import {getCookie} from './Utils';
-import DialogLoading from './molecules/dialog/Dialog'
+import {LoadingDialog, AlertDialog} from './molecules/dialogs/Dialogs'
 
 
 function Copyright() {
@@ -61,50 +61,68 @@ function SignUp(props) {
     if (props.currentComponentName !== SIGN_UP_WINDOW_NAME) {
         return null;
     }
+    const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
+
+
+    //region AlertDialog
+    const [openAlertDialog, setOpenAlertDialog] = useState(false);
+    const [alertDialogTitle, setAlertDialogTitle] = useState("");
+    const [alertDialogContentText, setAlertDialogContentText] = useState("");
+    const [alertDialogContentTextList, setAlertDialogContentTextList] = useState([]);
+    //endregion
 
     const classes = useStyles();
-
     const schema = yup.object().shape({
         firstName: yup.string().required(),
         lastName: yup.string().required(),
         email: yup.string().email().required(),
         password: yup.string().required(),
     });
-
     const {register, handleSubmit, errors} = useForm({
         resolver: yupResolver(schema)
     });
 
-    const onCloseDialogLoading = () => {
-    };
-    const [openDialogLoading, setOpenDialogLoading] = useState(false);
-
     const onSubmit = data => {
 
-        setOpenDialogLoading(true);
+        setOpenLoadingDialog(true);
 
-        // axios({
-        //     method: 'post',
-        //     url: Constants.URL_USER_CREATE,
-        //     data: {
-        //         username: data.email,
-        //         first_name: data.firstName,
-        //         last_name: data.lastName,
-        //         email: data.email
-        //     },
-        //     headers: {
-        //         'X-CSRFToken': getCookie('csrftoken')
-        //     }
-        // }).then(response => {
-        //     console.log('response', response);
-        // }).catch(function (error) {
-        //     console.log(error);
-        // }).finally(function () {
-        //     setTimeout(() => { setOpenDialogLoading(false); }, 2000);
-        // });
+        axios({
+            method: 'post',
+            url: Constants.URL_USER_CREATE,
+            data: {
+                username: data.email,
+                first_name: data.firstName,
+                last_name: data.lastName,
+                email: data.email
+            },
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        }).then(response => {
+            console.log('response', response);
+
+        }).catch(function (error) {
+            console.log(error.response);
+
+            setOpenLoadingDialog(false);
+
+            setAlertDialogTitle("Error creating new user");
+            setAlertDialogContentText("");
+            setAlertDialogContentTextList(error.response.data.errors);
+            setOpenAlertDialog(true);
+        });
     };
 
+    const onCloseLoadingDialog = () => {
+        console.log('onCloseLoadingDialog');
+    };
+    const onCloseAlertDialog = () => {
+        console.log('onCloseAlertDialog');
 
+        setAlertDialogTitle("");
+        setAlertDialogContentText("");
+        setOpenAlertDialog(false);
+    };
 
     return <Container component="main" maxWidth="xs">
         <CssBaseline/>
@@ -190,7 +208,18 @@ function SignUp(props) {
         <Box mt={5}>
             <Copyright/>
         </Box>
-        <DialogLoading dialogContentText={Constants.MESSAGE_CREATING_NEW_USER} onClose={onCloseDialogLoading} open={openDialogLoading} />
+        <LoadingDialog
+            dialogContentText={Constants.MESSAGE_CREATING_NEW_USER}
+            onClose={onCloseLoadingDialog}
+            open={openLoadingDialog}
+            dialogTitle={""}
+        />
+        <AlertDialog
+            dialogTitle={alertDialogTitle}
+            dialogContentText={alertDialogContentText}
+            onClose={onCloseAlertDialog}
+            open={openAlertDialog}
+            dialogContentTextList={alertDialogContentTextList}/>
     </Container>
 }
 

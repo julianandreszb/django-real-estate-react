@@ -34,4 +34,8 @@ https://reactjs.org/docs/lifting-state-up.html
 - https://reactjs.org/docs/faq-structure.html
 
 react-atomic-design:
-https://github.com/danilowoz/react-atomic-design
+* https://github.com/danilowoz/react-atomic-design
+* https://medium.com/backticks-tildes/visually-breaking-down-ui-components-using-atomic-design-part-1-476e1ddd73ca
+    * https://atomicdesign.bradfrost.com/chapter-1/
+
+https://stackoverflow.com/questions/39254562/csrf-with-django-reactredux-using-axios
