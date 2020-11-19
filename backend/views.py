@@ -18,7 +18,7 @@ def user_create(request):
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+        return JsonResponse(serializer.errors_as_array_object, status=400)
 
     return JsonResponse({'testkey': 'testvalue'})
 
