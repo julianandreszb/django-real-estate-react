@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import ensure_csrf_cookie
 from oauth2_provider.decorators import protected_resource
 from rest_framework.parsers import JSONParser
 
@@ -7,6 +8,7 @@ from .serializers import UserSerializer
 
 
 @protected_resource()
+@ensure_csrf_cookie
 def index(request):
     return render(request, 'frontend/index.html')
 
