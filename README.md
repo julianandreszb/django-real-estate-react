@@ -39,3 +39,32 @@ react-atomic-design:
     * https://atomicdesign.bradfrost.com/chapter-1/
 
 https://stackoverflow.com/questions/39254562/csrf-with-django-reactredux-using-axios
+
+
+----
+
+python3 manage.py createsuperuser
+    user: admin
+    password: admin
+    email: admin@admin.com
+    
+http://127.0.0.1:8000/admin/oauth2_provider/application/add/
+ClientID: xxx 
+ClientSecret: YYY 
+
+curl -X POST -d "grant_type=password&username=admin&password=admin" -u"fyOfdrlh67DNU1zWgtU0RgFqwhsmUkj1cQ6FEjrN:dcRpkqpbEVsidRgT3HQtnL80t5KiVG5wxocYIyTlHuilNWUksJV5vEP3ZWULS6PBA8yUECu8gHZHOiwWiBupPN3sHhgjZKR00fEwhoNsDlj6nby3I4MputXXhDqGhxPC" http://127.0.0.1:8000/o/token/
+curl -X POST -d "grant_type=password&username=admin&password=admin" -u"dcRpkqpbEVsidRgT3HQtnL80t5KiVG5wxocYIyTlHuilNWUksJV5vEP3ZWULS6PBA8yUECu8gHZHOiwWiBupPN3sHhgjZKR00fEwhoNsDlj6nby3I4MputXXhDqGhxPC" http://127.0.0.1:8000/o/token/
+    {
+        "access_token": "vgHEQ30JkYXHV2w8WYXQszedy3NOAT", 
+        "expires_in": 36000, 
+        "token_type": "Bearer", 
+        "scope": "read write groups", 
+        "refresh_token": "QXVCukgAsZt5DVyp5syjn8ic2L7Lq2"
+    }
+
+https://django-oauth-toolkit.readthedocs.io/en/latest/views/function_based.html
+
+https://create-react-app.dev/docs/title-and-meta-tags/#injecting-data-from-the-server-into-the-page
+
+
+https://create-react-app.dev

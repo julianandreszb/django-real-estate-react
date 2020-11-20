@@ -5,8 +5,8 @@ import theme from './theme';
 import * as Constants from './Constants';
 // import {Provider} from 'react-redux'
 // import store from './redux/store'
-import Home from './Home.js';
-import SignUp from "./SignUp";
+import Home from './pages/home/Home';
+import SignUp from "./pages/signup/SignUp";
 
 
 const App = () => {

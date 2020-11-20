@@ -50,7 +50,7 @@ function AlertDialog(props) {
                     {dialogContentText}
                 </DialogContentText>
             </DialogContent>}
-            {!!dialogContentTextList.length && dialogContentTextList.map(item => (
+            {!!dialogContentTextList && dialogContentTextList.map(item => (
                 <ListItem key={item.key}>
                     <ListItemText primary={item.value}/>
                 </ListItem>

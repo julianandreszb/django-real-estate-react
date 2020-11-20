@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import React, {useState} from "react";
-import * as Constants from './Constants'
+import * as Constants from '../../Constants'
 import styled from "styled-components";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import CssBaseline from "@material-ui/core/CssBaseline";

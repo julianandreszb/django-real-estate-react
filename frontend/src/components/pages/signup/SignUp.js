@@ -7,17 +7,16 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
-import {SIGN_UP_WINDOW_NAME} from "./Constants";
+import {SIGN_UP_WINDOW_NAME} from "../../Constants";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
-import axios from 'axios';
-import * as Constants from './Constants'
-import {getCookie} from './Utils';
-import {LoadingDialog, AlertDialog} from './molecules/dialogs/Dialogs'
+import * as Constants from '../../Constants'
+import {LoadingDialog, AlertDialog} from '../../molecules/dialogs/Dialogs'
+import {requestCreateUser} from './SignUpUtils'
 
 
 function Copyright() {
@@ -63,8 +62,13 @@ function SignUp(props) {
     }
     const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
 
+    const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
+    const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET;
 
-    //region AlertDialog
+    console.log('CLIENT_ID', CLIENT_ID);
+    console.log('CLIENT_SECRET', CLIENT_SECRET);
+
+    //region AlertDialog states
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
     const [alertDialogTitle, setAlertDialogTitle] = useState("");
     const [alertDialogContentText, setAlertDialogContentText] = useState("");
@@ -86,21 +90,8 @@ function SignUp(props) {
 
         setOpenLoadingDialog(true);
 
-        axios({
-            method: 'post',
-            url: Constants.URL_USER_CREATE,
-            data: {
-                username: data.email,
-                first_name: data.firstName,
-                last_name: data.lastName,
-                email: data.email
-            },
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            }
-        }).then(response => {
+        requestCreateUser(data).then(response => {
             console.log('response', response);
-
         }).catch(function (error) {
             console.log(error.response);
 
@@ -212,7 +203,7 @@ function SignUp(props) {
             dialogContentText={Constants.MESSAGE_CREATING_NEW_USER}
             onClose={onCloseLoadingDialog}
             open={openLoadingDialog}
-            dialogTitle={""}
+            dialogTitle={Constants.TITLE_LOADING_DIALOG}
         />
         <AlertDialog
             dialogTitle={alertDialogTitle}

@@ -1,3 +1,6 @@
+import axios from "axios";
+import * as Constants from "./Constants";
+
 /**
  * Used to get the CSRF Token (Required by Django backend)
  * @param name
@@ -17,4 +20,26 @@ export function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+/**
+ *
+ * @param data
+ * @returns {Promise}
+ */
+export function requestAccessToken(data) {
+
+    return axios({
+        method: 'post',
+        url: Constants.URL_USER_CREATE,
+        data: {
+            "grant_type": "password",
+            "username": data.username,
+            "password": data.password,
+        },
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Authorization': `Basic ${token}`
+        }
+    });
 }
