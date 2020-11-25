@@ -1,31 +1,21 @@
-import React, {useState} from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import theme from './theme';
-import * as Constants from './Constants';
-// import {Provider} from 'react-redux'
-// import store from './redux/store'
 import Home from './pages/home/Home';
 import SignUp from "./pages/signup/SignUp";
-
+import {AppContextProvider} from "./app-context";
+import LogIn from "./pages/login/LogIn";
 
 const App = () => {
-
-    const [currentComponentName, setCurrentComponentName] = useState(Constants.HOME_WINDOW_NAME);
-
-    function handleCurrentComponentNameChange(currentComponentName) {
-        setCurrentComponentName(currentComponentName);
-    }
-
-    const classes = {
-        textField: 'myTextFieldClass'
-    };
-
     return (
-        <ThemeProvider theme={theme}>
-            <Home theme={theme} currentComponentName={currentComponentName} onCurrentComponentNameChange={handleCurrentComponentNameChange} />
-            <SignUp classes={classes} currentComponentName={currentComponentName} />
-        </ThemeProvider>
+        <AppContextProvider>
+            <ThemeProvider theme={theme}>
+                <Home theme={theme}/>
+                <LogIn/>
+                <SignUp/>
+            </ThemeProvider>
+        </AppContextProvider>
     );
 };
 

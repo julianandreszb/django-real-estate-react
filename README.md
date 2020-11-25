@@ -68,3 +68,9 @@ https://create-react-app.dev/docs/title-and-meta-tags/#injecting-data-from-the-s
 
 
 https://create-react-app.dev
+
+---
+
+Pending to implement https://django-rest-framework-simplejwt.readthedocs.io/en/latest/getting_started.html
+
+https://www.sitepoint.com/replace-redux-react-hooks-context-api/

@@ -7,16 +7,13 @@ import {getCookie} from "../../Utils";
  * @param data
  * @returns {Promise}
  */
-export function requestCreateUser(data) {
+export function requestLogIn(data) {
 
     return axios({
         method: 'post',
-        url: Constants.URL_API_CREATE_USER,
+        url: Constants.URL_API_LOGIN_USER,
         data: {
             "username": data.email,
-            "first_name": data.firstName,
-            "last_name": data.lastName,
-            "email": data.email,
             "password": data.password,
         },
         headers: {

@@ -7,7 +7,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
-import {SIGN_UP_WINDOW_NAME, TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER} from "../../Constants";
+import {LOG_IN_WINDOW_NAME, TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER} from "../../Constants";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -16,11 +16,11 @@ import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import * as Constants from '../../Constants'
 import {LoadingDialog, AlertDialog} from '../../molecules/dialogs/Dialogs'
-import {requestCreateUser} from './SignUpUtils'
+import {requestLogIn} from './LogInUtils'
 import {getAccessTokenLocalStorage, requestAccessToken, saveAccessTokenLocalStorage, saveUserLocalStorage} from "../../Utils";
 import 'regenerator-runtime/runtime'
 import {AppContext} from "../../app-context";
-import Copyright from "../../molecules/typography/Typography"
+import Copyright from "../../molecules/typography/Typography";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -61,8 +61,6 @@ export default function (props) {
 
     const classes = useStyles();
     const schema = yup.object().shape({
-        firstName: yup.string().required(),
-        lastName: yup.string().required(),
         email: yup.string().email().required(),
         password: yup.string().required(),
     });
@@ -84,14 +82,14 @@ export default function (props) {
 
         setOpenLoadingDialog(true);
 
-        const responseCreateUser = await requestCreateUser(dataForm)
-            .then(responseCreateUser => {
-                console.log('requestLogIn.responseCreateUser', responseCreateUser);
+        const responseLogInUser = await requestLogIn(dataForm)
+            .then(responseLogIn => {
+                console.log('requestLogIn.responseLogIn', responseLogIn);
 
-                saveUserLocalStorage(responseCreateUser);
+                saveUserLocalStorage(responseLogIn);
 
                 setOpenLoadingDialog(false);
-                return responseCreateUser;
+                return responseLogIn;
             }).catch(function (error) {
                 console.log('requestLogIn.catch.error', error.response);
                 setOpenLoadingDialog(false);
@@ -99,9 +97,9 @@ export default function (props) {
                 return null;
             });
 
-        console.log('responseCreateUser', responseCreateUser);
+        console.log('responseLogInUser', responseLogInUser);
 
-        if (!!responseCreateUser) {
+        if (!!responseLogInUser) {
             const responseAccessToken = await requestAccessToken(dataForm)
                 .then(responseAccessToken => {
                     console.log('requestAccessToken.responseAccessToken', responseAccessToken);
@@ -141,7 +139,7 @@ export default function (props) {
         setOpenAlertDialog(false);
     };
 
-    return (state.currentPage === SIGN_UP_WINDOW_NAME &&
+    return (state.currentPage === LOG_IN_WINDOW_NAME &&
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
             <div className={classes.paper}>
@@ -149,39 +147,10 @@ export default function (props) {
                     <LockOutlinedIcon/>
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign up
+                    Log in
                 </Typography>
                 <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                type="text"
-                                autoComplete="fname"
-                                name="firstName"
-                                variant="outlined"
-                                fullWidth
-                                id="firstName"
-                                label="First Name"
-                                inputRef={register}
-                                error={!!errors.firstName}
-                                helperText={errors.firstName?.message}
-                                autoFocus
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                type="text"
-                                autoComplete="lname"
-                                name="lastName"
-                                variant="outlined"
-                                fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                inputRef={register}
-                                error={!!errors.lastName}
-                                helperText={errors.lastName?.message}
-                            />
-                        </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 type="text"
@@ -212,12 +181,12 @@ export default function (props) {
                         </Grid>
                     </Grid>
                     <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-                        Sign Up
+                        Sign In
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
                             <Link href="#" variant="body2">
-                                Already have an account? Sign in
+                                Don't have an account yet?  Sign Up
                             </Link>
                         </Grid>
                     </Grid>

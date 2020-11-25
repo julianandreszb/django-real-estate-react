@@ -6,23 +6,22 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import * as Constants from '../../Constants'
 import styled from "styled-components";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-
+import {AppContext} from "../../app-context";
+import {HOME_WINDOW_NAME} from "../../Constants";
+import {removeAccessTokenLocalStorage} from "../../Utils"
 
 /**
  * @return {null}
  */
 export default function (props) {
-
     console.log('frontend/src/components/Home.js.props', props);
 
-    if (props.currentComponentName !== Constants.HOME_WINDOW_NAME) {
-        return null;
-    }
+    const [state, dispatch] = useContext(AppContext);
 
     const theme = props.theme;
 
@@ -44,33 +43,52 @@ export default function (props) {
         },
     }));
 
-    const classes = useStyles(props.theme);
+    const classes = useStyles(theme);
 
     function onClickLoginButton() {
-        props.onCurrentComponentNameChange(Constants.SIGN_UP_WINDOW_NAME);
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_CURRENT_PAGE,
+            payload: Constants.LOG_IN_WINDOW_NAME
+        });
     }
 
-    return <>
-        <CssBaseline/>
-        <AppBar position="static">
-            <Toolbar>
-                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <MenuIcon/>
-                </IconButton>
-                <Typography variant="h6" className={classes.title}>
-                    {appTitle}
-                </Typography>
-                <Button onClick={onClickLoginButton} color="inherit">Login</Button>
-            </Toolbar>
-        </AppBar>
-        <Container maxWidth="sm">
-            <Box my={4}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Create React App v4-beta example
-                </Typography>
-                <StyledButton>Styled Button (Edited).</StyledButton>
-                <Button>Button (No edited).</Button>
-            </Box>
-        </Container>
-    </>
+    function onClickLogoutButton() {
+        removeAccessTokenLocalStorage();
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN,
+            payload: false
+        });
+    }
+
+    console.log('state.isLoggedIn', state.isLoggedIn);
+
+    const buttonLoginLogout = state.isLoggedIn ?
+        <Button onClick={onClickLogoutButton} color="inherit">Logout</Button> :
+        <Button onClick={onClickLoginButton} color="inherit">Login</Button>;
+
+    return (state.currentPage === HOME_WINDOW_NAME &&
+        <>
+            <CssBaseline/>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                        <MenuIcon/>
+                    </IconButton>
+                    <Typography variant="h6" className={classes.title}>
+                        {appTitle}
+                    </Typography>
+                    {buttonLoginLogout}
+                </Toolbar>
+            </AppBar>
+            <Container maxWidth="sm">
+                <Box my={4}>
+                    <Typography variant="h4" component="h1" gutterBottom>
+                        Create React App v4-beta example
+                    </Typography>
+                    <StyledButton>Styled Button (Edited).</StyledButton>
+                    <Button>Button (No edited).</Button>
+                </Box>
+            </Container>
+        </>
+    )
 }
