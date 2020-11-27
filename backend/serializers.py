@@ -1,6 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
-from backend.models import User
+from backend.models import User, OperationType
 
 
 # https://nemecek.be/blog/23/how-to-createregister-user-account-with-django-rest-framework-api
@@ -38,3 +38,71 @@ class UserSerializer(serializers.ModelSerializer):
         return User.objects.update(**validated_data)
 
 
+# https://www.django-rest-framework.org/tutorial/1-serialization/
+class OperationTypeSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(required=True, max_length=10)
+
+    class Meta:
+        model = OperationType
+        fields = ['id', 'name']
+
+    def create(self, validated_data):
+        """
+        Create and return a new `OperationType` instance, given the validated data.
+        """
+        return OperationType.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `OperationType` instance, given the validated data.
+        """
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
+
+
+class OperationTypeSerializerFrontEnd(serializers.ModelSerializer):
+    value = serializers.IntegerField(source='id', read_only=True)
+    label = serializers.CharField(source='name', required=True, max_length=10)
+
+    class Meta:
+        model = OperationType
+        fields = ['value', 'label']
+
+    def create(self, validated_data):
+        """
+        Create and return a new `OperationType` instance, given the validated data.
+        """
+        return OperationType.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `OperationType` instance, given the validated data.
+        """
+        instance.name = validated_data.get('name', instance.label)
+        instance.save()
+        return instance
+
+
+class PropertyTypeSerializerFrontEnd(serializers.ModelSerializer):
+    value = serializers.IntegerField(source='id', read_only=True)
+    label = serializers.CharField(source='name', required=True, max_length=30)
+
+    class Meta:
+        model = OperationType
+        fields = ['value', 'label']
+
+    def create(self, validated_data):
+        """
+        Create and return a new `OperationType` instance, given the validated data.
+        """
+        return OperationType.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `OperationType` instance, given the validated data.
+        """
+        instance.name = validated_data.get('name', instance.label)
+        instance.save()
+        return instance

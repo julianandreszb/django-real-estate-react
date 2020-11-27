@@ -8,16 +8,15 @@ import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import React, {useContext, useState} from "react";
 import * as Constants from '../../Constants'
-import styled from "styled-components";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {AppContext} from "../../app-context";
 import {HOME_WINDOW_NAME} from "../../Constants";
 import {removeAccessTokenLocalStorage} from "../../Utils"
+import OperationType from "../../molecules/operation_type/OperationType";
+import PropertyType from "../../molecules/property_type/PropertyType";
+import Grid from "@material-ui/core/Grid";
 
-/**
- * @return {null}
- */
 export default function (props) {
     console.log('frontend/src/components/Home.js.props', props);
 
@@ -27,10 +26,6 @@ export default function (props) {
 
     const [appTitle, setAppTitle] = useState('RealState');
 
-    const StyledButton = styled(Button)`
-      color: ${() => theme.palette.primary.main};
-      background: black
-    `;
     const useStyles = makeStyles((theme) => ({
         root: {
             flexGrow: 1,
@@ -85,8 +80,16 @@ export default function (props) {
                     <Typography variant="h4" component="h1" gutterBottom>
                         Create React App v4-beta example
                     </Typography>
-                    <StyledButton>Styled Button (Edited).</StyledButton>
-                    <Button>Button (No edited).</Button>
+                    <form className={classes.form}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <OperationType/>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <PropertyType/>
+                            </Grid>
+                        </Grid>
+                    </form>
                 </Box>
             </Container>
         </>

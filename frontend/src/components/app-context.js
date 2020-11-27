@@ -46,6 +46,12 @@ const AppContextProvider = props => {
         isLoggedIn: !!token
     };
 
+    useEffect(() => {
+
+
+
+    });
+
     const [state, dispatch] = useReducer(reducer, initialValues, init);
 
     return (

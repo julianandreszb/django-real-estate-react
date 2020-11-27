@@ -15,6 +15,10 @@ export const LOG_IN_WINDOW_NAME = 'logIn';
 //region API URLS
 export const URL_API_CREATE_USER = 'api/user/create';
 export const URL_API_LOGIN_USER = 'api/user/login';
+
+export const URL_API_OPERATION_TYPES = 'api/operation_types';
+export const URL_API_PROPERTY_TYPES = 'api/property_types';
+
 export const URL_API_REQUEST_ACCESS_TOKEN = 'o/token/';
 export const URL_API_REQUEST_REVOKE_TOKEN = 'o/revoke_token/';
 //endregion

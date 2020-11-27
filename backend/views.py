@@ -4,7 +4,9 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from oauth2_provider.decorators import protected_resource
 from rest_framework.parsers import JSONParser
 
-from .serializers import UserSerializer
+from .models import OperationType, PropertyType
+from .serializers import UserSerializer, OperationTypeSerializer, OperationTypeSerializerFrontEnd, \
+    PropertyTypeSerializerFrontEnd
 
 
 @protected_resource()
@@ -50,3 +52,19 @@ def user_create(request):
     #     return HttpResponseRedirect(reverse("index"))
     # else:
     #     return render(request, "network/register.html")
+
+
+def operation_types(request):
+    array_operation_types = OperationType.objects.all()
+
+    serializer = OperationTypeSerializerFrontEnd(array_operation_types, many=True)
+
+    return JsonResponse(serializer.data, safe=False)
+
+
+def property_types(request):
+    array_property_types = PropertyType.objects.all()
+
+    serializer = PropertyTypeSerializerFrontEnd(array_property_types, many=True)
+
+    return JsonResponse(serializer.data, safe=False)
