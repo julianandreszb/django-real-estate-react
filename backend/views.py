@@ -1,3 +1,5 @@
+import time
+
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -68,3 +70,43 @@ def property_types(request):
     serializer = PropertyTypeSerializerFrontEnd(array_property_types, many=True)
 
     return JsonResponse(serializer.data, safe=False)
+
+
+def test_search(request, q):
+    time.sleep(2)
+
+    # return JsonResponse({
+    #     "query": q
+    # }, safe=False)
+
+    return JsonResponse({
+        "PT": {
+            "index-entry-number": "147",
+            "entry-number": "147",
+            "entry-timestamp": "2016-04-05T13:23:05Z",
+            "key": "PT",
+            "item": [
+                {
+                    "country": "PT",
+                    "official-name": "The Portuguese Republic",
+                    "name": "Portugal",
+                    "citizen-names": "Portuguese"
+                }
+            ]
+        },
+        "PW": {
+            "index-entry-number": "140",
+            "entry-number": "140",
+            "entry-timestamp": "2016-04-05T13:23:05Z",
+            "key": "PW",
+            "item": [
+                {
+                    "country": "PW",
+                    "official-name": "The Republic of Palau",
+                    "name": "Palau",
+                    "start-date": "1994-10-01",
+                    "citizen-names": "Palauan"
+                }
+            ]
+        }
+    }, safe=False)

@@ -6,15 +6,17 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
+import {AppContext} from "../../app-context";
+import {HOME_WINDOW_NAME} from "../../Constants";
 import React, {useContext, useState} from "react";
 import * as Constants from '../../Constants'
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import {AppContext} from "../../app-context";
-import {HOME_WINDOW_NAME} from "../../Constants";
 import {removeAccessTokenLocalStorage} from "../../Utils"
 import OperationType from "../../molecules/operation_type/OperationType";
 import PropertyType from "../../molecules/property_type/PropertyType";
+import SearchAsynchronous from '../../molecules/search/SearchAsynchronous'
+
 import Grid from "@material-ui/core/Grid";
 
 export default function (props) {
@@ -82,11 +84,14 @@ export default function (props) {
                     </Typography>
                     <form className={classes.form}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={3}>
                                 <OperationType/>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={3}>
                                 <PropertyType/>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <SearchAsynchronous/>
                             </Grid>
                         </Grid>
                     </form>

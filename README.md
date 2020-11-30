@@ -77,3 +77,48 @@ https://www.sitepoint.com/replace-redux-react-hooks-context-api/
 
 Axios, initialize state, useEffect
 https://www.pluralsight.com/guides/hierarchy-of-components-and-how-to-get-async-data
+
+
+
+{search_type}		-	{department_id}			- 	{city_id}		-	neighborhood_id 		= 	Result
+C: City				-	32: valle del cauca		-	10: Cali 		-							=	N-32-10 
+N: Neighborhood		-	32: valle del cauca		-	10: Cali		-	50: Calimio Desepaz		=	N-32-10-50
+
+[
+   {
+        search_type: "C",
+        department: {
+            id: 32,
+            name: "valle del cauca"    
+        },
+        city: {
+            id: 10,
+            name: "Cali"
+        }
+    },
+    {
+        search_type: "N",
+        department: {
+            id: 32,
+            name: "valle del cauca"    
+        },
+        city: {
+            id: 10,
+            name: "Cali"
+        }
+        neighborhood: {
+            id: 50,
+            name : "Calimio Desepaz"
+        }
+    }
+]
+[
+	{
+		value: "N-32-10",
+		label: "Cali, Valle del cauca"
+	},
+	{
+		value: "N-32-10-50",
+		label: "Calimio Desepaz, Cali, Valle del cauca"
+	}
+]
