@@ -50,7 +50,7 @@ class City(models.Model):
         db_table = "backend_city"
 
     name = models.CharField(max_length=30)
-    department = models.ForeignKey("Department", on_delete=models.CASCADE, related_name="cities")
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name="cities")
 
     def serialize(self):
         return {

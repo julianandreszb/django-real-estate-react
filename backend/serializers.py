@@ -1,6 +1,7 @@
 from django.contrib.auth.hashers import make_password
+from django.utils.timezone import now
 from rest_framework import serializers
-from backend.models import User, OperationType
+from backend.models import User, OperationType, Department, City
 
 
 # https://nemecek.be/blog/23/how-to-createregister-user-account-with-django-rest-framework-api
@@ -104,5 +105,59 @@ class PropertyTypeSerializerFrontEnd(serializers.ModelSerializer):
         Update and return an existing `OperationType` instance, given the validated data.
         """
         instance.name = validated_data.get('name', instance.label)
+        instance.save()
+        return instance
+
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(required=True, max_length=10)
+
+    class Meta:
+        model = Department
+        fields = ['id', 'name']
+
+    def create(self, validated_data):
+        """
+        Create and return a new `OperationType` instance, given the validated data.
+        """
+        return OperationType.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `OperationType` instance, given the validated data.
+        """
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
+
+
+class CitySerializer(serializers.ModelSerializer):
+    department = DepartmentSerializer()  # All fields
+    # department = serializers.PrimaryKeyRelatedField(read_only=True)  # Only primary key
+    search_type = serializers.SerializerMethodField()
+
+    class Meta:
+        model = City
+        fields = ['id', 'name', 'department', 'search_type']
+
+    @staticmethod
+    def get_search_type(obj):
+        return 'City'
+        # C = city
+        # first d = department
+        # return "%s-%d-%d" % ('C', obj.id, obj.id)
+
+    def create(self, validated_data):
+        """
+        Create and return a new `OperationType` instance, given the validated data.
+        """
+        return OperationType.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `OperationType` instance, given the validated data.
+        """
+        instance.name = validated_data.get('name', instance.name)
         instance.save()
         return instance

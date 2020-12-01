@@ -3,11 +3,13 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from "axios";
+import PropTypes from "prop-types";
+import {LoadingDialog} from "../dialogs/Dialogs";
 
 const CancelToken = axios.CancelToken;
 let cancel;
 
-export default function SearchAsynchronous() {
+function SearchAsynchronous(props) {
 
     const [value, setValue] = useState({name: ''});
     const [inputValue, setInputValue] = useState('');
@@ -30,7 +32,8 @@ export default function SearchAsynchronous() {
                     cancel("Cancelling request.");
                 }
 
-                const response = await axios(`api/test_search/${newInputValue}`, {
+                //const response = await axios(`api/test_search/${newInputValue}`, {
+                const response = await axios(`${props.url}/${newInputValue}`, {
                     cancelToken: new CancelToken(function executor(c) {
                         // An executor function receives a cancel function as a parameter
                         cancel = c;
@@ -41,8 +44,10 @@ export default function SearchAsynchronous() {
 
                 if (typeof response !== 'undefined') {
                     const responseData = await response.data;
+                    console.log('responseData', responseData);
                     setLoading(false);
-                    setOptions(Object.keys(responseData).map((key) => responseData[key].item[0]));
+                    // setOptions(Object.keys(responseData).map((key) => responseData[key].item[0]));
+                    setOptions(Object.keys(responseData).map((key) => responseData[key]));
                 }
             })();
         }
@@ -70,6 +75,7 @@ export default function SearchAsynchronous() {
             loading={loading}
             value={value}
             onChange={(event, newValue) => {
+                event.preventDefault();
                 console.log('onChange.previousValue', value);
                 console.log('onChange.newValue', newValue);
                 setValue(newValue);
@@ -77,7 +83,8 @@ export default function SearchAsynchronous() {
             inputValue={inputValue}
             onInputChange={handleOnInputChange}
             filterOptions={(options, state) => options}
-            clearOnBlur={false}
+            clearOnBlur={false}// TODO if value false then it triggers a fetch/axios request once you select an AutoComplete option
+            // clearOnBlur={true}
             renderInput={(params) => (
                 <TextField
                     {...params}
@@ -97,3 +104,9 @@ export default function SearchAsynchronous() {
         />
     );
 }
+
+SearchAsynchronous.propTypes = {
+    "url": PropTypes.string.isRequired
+};
+
+export {SearchAsynchronous};

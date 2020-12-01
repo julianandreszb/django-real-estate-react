@@ -15,7 +15,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import {removeAccessTokenLocalStorage} from "../../Utils"
 import OperationType from "../../molecules/operation_type/OperationType";
 import PropertyType from "../../molecules/property_type/PropertyType";
-import SearchAsynchronous from '../../molecules/search/SearchAsynchronous'
+import {SearchAsynchronous} from '../../molecules/search/SearchAsynchronous'
 
 import Grid from "@material-ui/core/Grid";
 
@@ -91,7 +91,7 @@ export default function (props) {
                                 <PropertyType/>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <SearchAsynchronous/>
+                                <SearchAsynchronous url={Constants.URL_API_SEARCH_CITY_NEIGHBORHOOD}/>
                             </Grid>
                         </Grid>
                     </form>

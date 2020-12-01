@@ -18,6 +18,7 @@ export const URL_API_LOGIN_USER = 'api/user/login';
 
 export const URL_API_OPERATION_TYPES = 'api/operation_types';
 export const URL_API_PROPERTY_TYPES = 'api/property_types';
+export const URL_API_SEARCH_CITY_NEIGHBORHOOD = 'api/search_city_neighborhood';
 
 export const URL_API_REQUEST_ACCESS_TOKEN = 'o/token/';
 export const URL_API_REQUEST_REVOKE_TOKEN = 'o/revoke_token/';

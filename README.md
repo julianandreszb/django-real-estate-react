@@ -81,7 +81,7 @@ https://www.pluralsight.com/guides/hierarchy-of-components-and-how-to-get-async-
 
 
 {search_type}		-	{department_id}			- 	{city_id}		-	neighborhood_id 		= 	Result
-C: City				-	32: valle del cauca		-	10: Cali 		-							=	N-32-10 
+C: City				-	32: valle del cauca		-	10: Cali 		-							=	C-32-10 
 N: Neighborhood		-	32: valle del cauca		-	10: Cali		-	50: Calimio Desepaz		=	N-32-10-50
 
 [

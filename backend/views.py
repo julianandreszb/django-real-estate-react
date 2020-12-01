@@ -6,9 +6,9 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from oauth2_provider.decorators import protected_resource
 from rest_framework.parsers import JSONParser
 
-from .models import OperationType, PropertyType
-from .serializers import UserSerializer, OperationTypeSerializer, OperationTypeSerializerFrontEnd, \
-    PropertyTypeSerializerFrontEnd
+from .models import OperationType, PropertyType, City, Department
+from .serializers import UserSerializer, OperationTypeSerializerFrontEnd, \
+    PropertyTypeSerializerFrontEnd, CitySerializer
 
 
 @protected_resource()
@@ -72,41 +72,43 @@ def property_types(request):
     return JsonResponse(serializer.data, safe=False)
 
 
-def test_search(request, q):
-    time.sleep(2)
+def search_city_neighborhood(request, q):
+
+    array_cities = City.objects.filter(name__contains=q)
+    serializer = CitySerializer(array_cities, many=True)
+
+    return JsonResponse(serializer.data, safe=False)
+    #
+    # # TODO - Next, search for neighborhood
 
     # return JsonResponse({
-    #     "query": q
+    #     "PT": {
+    #         "index-entry-number": "147",
+    #         "entry-number": "147",
+    #         "entry-timestamp": "2016-04-05T13:23:05Z",
+    #         "key": "PT",
+    #         "item": [
+    #             {
+    #                 "country": "PT",
+    #                 "official-name": "The Portuguese Republic",
+    #                 "name": "Portugal",
+    #                 "citizen-names": "Portuguese"
+    #             }
+    #         ]
+    #     },
+    #     "PW": {
+    #         "index-entry-number": "140",
+    #         "entry-number": "140",
+    #         "entry-timestamp": "2016-04-05T13:23:05Z",
+    #         "key": "PW",
+    #         "item": [
+    #             {
+    #                 "country": "PW",
+    #                 "official-name": "The Republic of Palau",
+    #                 "name": "Palau",
+    #                 "start-date": "1994-10-01",
+    #                 "citizen-names": "Palauan"
+    #             }
+    #         ]
+    #     }
     # }, safe=False)
-
-    return JsonResponse({
-        "PT": {
-            "index-entry-number": "147",
-            "entry-number": "147",
-            "entry-timestamp": "2016-04-05T13:23:05Z",
-            "key": "PT",
-            "item": [
-                {
-                    "country": "PT",
-                    "official-name": "The Portuguese Republic",
-                    "name": "Portugal",
-                    "citizen-names": "Portuguese"
-                }
-            ]
-        },
-        "PW": {
-            "index-entry-number": "140",
-            "entry-number": "140",
-            "entry-timestamp": "2016-04-05T13:23:05Z",
-            "key": "PW",
-            "item": [
-                {
-                    "country": "PW",
-                    "official-name": "The Republic of Palau",
-                    "name": "Palau",
-                    "start-date": "1994-10-01",
-                    "citizen-names": "Palauan"
-                }
-            ]
-        }
-    }, safe=False)
