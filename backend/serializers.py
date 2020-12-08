@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from django.utils.timezone import now
 from rest_framework import serializers
-from backend.models import User, OperationType, Department, City
+from backend.models import User, OperationType, Department, City, Neighborhood
 
 
 # https://nemecek.be/blog/23/how-to-createregister-user-account-with-django-rest-framework-api
@@ -136,10 +136,12 @@ class CitySerializer(serializers.ModelSerializer):
     department = DepartmentSerializer()  # All fields
     # department = serializers.PrimaryKeyRelatedField(read_only=True)  # Only primary key
     search_type = serializers.SerializerMethodField()
+    label = serializers.SerializerMethodField()
 
     class Meta:
         model = City
-        fields = ['id', 'name', 'department', 'search_type']
+        # fields = ['id', 'name', 'department', 'search_type']
+        fields = ['id', 'name', 'department', 'search_type', 'label']
 
     @staticmethod
     def get_search_type(obj):
@@ -147,6 +149,46 @@ class CitySerializer(serializers.ModelSerializer):
         # C = city
         # first d = department
         # return "%s-%d-%d" % ('C', obj.id, obj.id)
+
+    @staticmethod
+    def get_label(obj):
+        return "%s, %s" % (obj.name, obj.department.name)
+
+    def create(self, validated_data):
+        """
+        Create and return a new `OperationType` instance, given the validated data.
+        """
+        return OperationType.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `OperationType` instance, given the validated data.
+        """
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
+
+
+class NeighborhoodSerializer(serializers.ModelSerializer):
+    city = CitySerializer()  # All fields
+    # department = serializers.PrimaryKeyRelatedField(read_only=True)  # Only primary key
+    search_type = serializers.SerializerMethodField()
+    label = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Neighborhood
+        fields = ['id', 'name', 'city', 'search_type', 'label']
+
+    @staticmethod
+    def get_search_type(obj):
+        return 'Neighborhood'
+        # C = city
+        # first d = department
+        # return "%s-%d-%d" % ('C', obj.id, obj.id)
+
+    @staticmethod
+    def get_label(obj):
+        return "%s, %s, %s" % (obj.name, obj.city.name, obj.city.department.name)
 
     def create(self, validated_data):
         """

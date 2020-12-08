@@ -58,3 +58,11 @@ class City(models.Model):
             "name": self.name,
             "department": self.department
         }
+
+
+class Neighborhood(models.Model):
+    class Meta:
+        db_table = "backend_neighborhood"
+
+    name = models.CharField(max_length=30)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name="neighborhoods")

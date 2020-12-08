@@ -17,7 +17,12 @@ import Link from "@material-ui/core/Link";
 import * as Constants from '../../Constants'
 import {LoadingDialog, AlertDialog} from '../../molecules/dialogs/Dialogs'
 import {requestLogIn} from './LogInUtils'
-import {getAccessTokenLocalStorage, requestAccessToken, saveAccessTokenLocalStorage, saveUserLocalStorage} from "../../Utils";
+import {
+    getAccessTokenLocalStorage,
+    requestAccessToken,
+    saveAccessTokenLocalStorage,
+    saveUserLocalStorage
+} from "../../Utils";
 import 'regenerator-runtime/runtime'
 import {AppContext} from "../../app-context";
 import Copyright from "../../molecules/typography/Typography";
@@ -48,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 export default function (props) {
     const [state, dispatch] = useContext(AppContext);
 
-    console.log('SignUp.state.currentPage', state.currentPage);
+    console.log('LogIn.state.currentPage', state.currentPage);
 
     const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
 
@@ -99,21 +104,32 @@ export default function (props) {
 
         console.log('responseLogInUser', responseLogInUser);
 
-        if (!!responseLogInUser) {
-            const responseAccessToken = await requestAccessToken(dataForm)
-                .then(responseAccessToken => {
-                    console.log('requestAccessToken.responseAccessToken', responseAccessToken);
+        if (!!responseLogInUser && !!responseLogInUser.data) {
 
-                    saveAccessTokenLocalStorage(responseAccessToken.data);
-                    const accessToken = getAccessTokenLocalStorage();
-                    console.log('accessToken', accessToken);
+            let responseAccessToken;
 
-                    return responseAccessToken;
-                }).catch(function (error) {
-                    console.log('requestAccessToken.catch.error', error.response);
-                    handleRequestAccessTokenError(error);
-                    return null;
-                });
+            if (typeof responseLogInUser.data.access_token !== 'undefined' &&
+                typeof responseLogInUser.data.refresh_token !== 'undefined') {
+
+                saveAccessTokenLocalStorage(responseLogInUser);
+                responseAccessToken = getAccessTokenLocalStorage();
+            } else {
+
+                responseAccessToken = await requestAccessToken(dataForm)
+                    .then(responseAccessToken => {
+                        console.log('requestAccessToken.responseAccessToken', responseAccessToken);
+
+                        saveAccessTokenLocalStorage(responseAccessToken.data);
+                        const accessToken = getAccessTokenLocalStorage();
+                        console.log('accessToken', accessToken);
+
+                        return responseAccessToken;
+                    }).catch(function (error) {
+                        console.log('requestAccessToken.catch.error', error.response);
+                        handleRequestAccessTokenError(error);
+                        return null;
+                    });
+            }
 
             if (!!responseAccessToken) {
                 dispatch({
@@ -137,6 +153,14 @@ export default function (props) {
         setAlertDialogTitle("");
         setAlertDialogContentText("");
         setOpenAlertDialog(false);
+    };
+
+    const onClickSignUpLink = (event) => {
+        event.preventDefault();
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_CURRENT_PAGE,
+            payload: Constants.SIGN_UP_WINDOW_NAME
+        });
     };
 
     return (state.currentPage === LOG_IN_WINDOW_NAME &&
@@ -185,8 +209,8 @@ export default function (props) {
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link href="#" variant="body2">
-                                Don't have an account yet?  Sign Up
+                            <Link onClick={onClickSignUpLink} href="#" variant="body2">
+                                Don't have an account yet? Sign Up
                             </Link>
                         </Grid>
                     </Grid>

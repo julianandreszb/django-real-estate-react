@@ -1,17 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from "axios";
 import PropTypes from "prop-types";
 import {LoadingDialog} from "../dialogs/Dialogs";
+import {AppContext} from "../../app-context";
+import * as Constants from "../../Constants";
 
 const CancelToken = axios.CancelToken;
 let cancel;
 
 function SearchAsynchronous(props) {
 
-    const [value, setValue] = useState({name: ''});
+    const [state, dispatch] = useContext(AppContext);
+    const [value, setValue] = useState({label: ''});
     const [inputValue, setInputValue] = useState('');
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState([]);
@@ -69,8 +72,9 @@ function SearchAsynchronous(props) {
             onClose={() => {
                 setOpen(false);
             }}
-            getOptionSelected={(option, value) => option.name === value.name}//Do not filter. Show all options
-            getOptionLabel={(option) => option.name}
+            getOptionSelected={(option, value) => option.label === value.label}//Do not filter. Show all options
+            // getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => option.label}
             options={options}
             loading={loading}
             value={value}
@@ -78,7 +82,12 @@ function SearchAsynchronous(props) {
                 event.preventDefault();
                 console.log('onChange.previousValue', value);
                 console.log('onChange.newValue', newValue);
+                dispatch({
+                    type: Constants.APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION,
+                    payload: newValue
+                });
                 setValue(newValue);
+
             }}
             inputValue={inputValue}
             onInputChange={handleOnInputChange}

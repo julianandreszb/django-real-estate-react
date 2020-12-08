@@ -122,3 +122,11 @@ N: Neighborhood		-	32: valle del cauca		-	10: Cali		-	50: Calimio Desepaz		=	N-3
 		label: "Calimio Desepaz, Cali, Valle del cauca"
 	}
 ]
+
+https://stackoverflow.com/questions/29459037/generating-an-access-token-programatically-with-django-oauth2-toolkit
+
+    # https://docs.djangoproject.com/en/3.1/topics/auth/default/
+
+    # ----------------
+
+    # https://www.django-rest-framework.org/api-guide/authentication/

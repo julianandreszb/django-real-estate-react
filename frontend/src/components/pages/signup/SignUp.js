@@ -141,6 +141,14 @@ export default function (props) {
         setOpenAlertDialog(false);
     };
 
+    const onClickLogInLink = (event) => {
+        event.preventDefault();
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_CURRENT_PAGE,
+            payload: Constants.LOG_IN_WINDOW_NAME
+        });
+    };
+
     return (state.currentPage === SIGN_UP_WINDOW_NAME &&
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
@@ -216,7 +224,7 @@ export default function (props) {
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link onClick={onClickLogInLink} href="#" variant="body2">
                                 Already have an account? Sign in
                             </Link>
                         </Grid>

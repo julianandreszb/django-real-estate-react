@@ -3,11 +3,12 @@ export const APP_TITLE_NAME = 'RealState';
 //region "AppContext" - DISPATCH ACTIONS
 export const APP_CONTEXT_ACTION_SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 export const APP_CONTEXT_ACTION_RESET = 'RESET';
-export let APP_CONTEXT_ACTION_SET_IS_LOGGED_IN = 'SET_IS_LOGGED_IN';
+export const APP_CONTEXT_ACTION_SET_IS_LOGGED_IN = 'SET_IS_LOGGED_IN';
+export const APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION = 'SET_AUTOCOMPLETE_OPTION';
 //endregion
 
 //region PAGES COMPONENT NAMES
-export const HOME_WINDOW_NAME = 'home';
+export const HOME_WINDOW_NAME = 'dashboard';
 export const SIGN_UP_WINDOW_NAME = 'signUp';
 export const LOG_IN_WINDOW_NAME = 'logIn';
 //endregion
@@ -15,6 +16,7 @@ export const LOG_IN_WINDOW_NAME = 'logIn';
 //region API URLS
 export const URL_API_CREATE_USER = 'api/user/create';
 export const URL_API_LOGIN_USER = 'api/user/login';
+// export const URL_API_LOGIN_USER = 'api/user/api-token-auth';
 
 export const URL_API_OPERATION_TYPES = 'api/operation_types';
 export const URL_API_PROPERTY_TYPES = 'api/property_types';

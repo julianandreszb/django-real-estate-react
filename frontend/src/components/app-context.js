@@ -19,11 +19,14 @@ const reducer = (state, action) => {
         case Constants.APP_CONTEXT_ACTION_SET_CURRENT_PAGE:
             return {...state, currentPage: action.payload};
 
-        case Constants.APP_CONTEXT_ACTION_RESET:
-            return init(action.payload);
-
         case Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN:
             return {...state, isLoggedIn: action.payload};
+
+        case Constants.APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION:
+            return {...state, autocompleteOption: action.payload};
+
+        case Constants.APP_CONTEXT_ACTION_RESET:
+            return init(action.payload);
 
         default:
             throw new Error();
