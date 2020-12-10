@@ -9,9 +9,9 @@ from oauth2_provider.decorators import protected_resource
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import JSONParser
 
-from .models import OperationType, PropertyType, City, Neighborhood
+from .models import OperationType, PropertyType, City, Neighborhood, Ad
 from .serializers import UserSerializer, OperationTypeSerializerFrontEnd, \
-    PropertyTypeSerializerFrontEnd, CitySerializer, NeighborhoodSerializer
+    PropertyTypeSerializerFrontEnd, CitySerializer, NeighborhoodSerializer, AdSerializer
 
 from oauth2_provider.models import AccessToken, RefreshToken
 
@@ -149,47 +149,30 @@ def property_types(request):
 
 
 def search_city_neighborhood(request, q):
+    # Search for Cities
     list_cities = City.objects.filter(name__contains=q)
     city_serializer = CitySerializer(list_cities, many=True)
 
+    # Search for Neighborhoods
     list_neighborhoods = Neighborhood.objects.filter(name__contains=q)
     neighborhood_serializer = NeighborhoodSerializer(list_neighborhoods, many=True)
 
+    # Merge result
     list_result = city_serializer.data + neighborhood_serializer.data
 
     return JsonResponse(list_result, safe=False)
-    # return JsonResponse(city_serializer.data, safe=False)
-    #
-    # # TODO - Next, search for neighborhood
 
-    # return JsonResponse({
-    #     "PT": {
-    #         "index-entry-number": "147",
-    #         "entry-number": "147",
-    #         "entry-timestamp": "2016-04-05T13:23:05Z",
-    #         "key": "PT",
-    #         "item": [
-    #             {
-    #                 "country": "PT",
-    #                 "official-name": "The Portuguese Republic",
-    #                 "name": "Portugal",
-    #                 "citizen-names": "Portuguese"
-    #             }
-    #         ]
-    #     },
-    #     "PW": {
-    #         "index-entry-number": "140",
-    #         "entry-number": "140",
-    #         "entry-timestamp": "2016-04-05T13:23:05Z",
-    #         "key": "PW",
-    #         "item": [
-    #             {
-    #                 "country": "PW",
-    #                 "official-name": "The Republic of Palau",
-    #                 "name": "Palau",
-    #                 "start-date": "1994-10-01",
-    #                 "citizen-names": "Palauan"
-    #             }
-    #         ]
-    #     }
-    # }, safe=False)
+
+def search_ads(request, search_type, pk):
+    if search_type == 'neighborhood':
+
+        list_ads = Ad.objects.filter(neighborhood__id__exact=pk)
+        ad_serializer = AdSerializer(list_ads, many=True)
+        return JsonResponse(ad_serializer.data, safe=False)
+    elif search_type == 'city':
+
+        list_ads = Ad.objects.filter(neighborhood__city_id__exact=pk)
+        ad_serializer = AdSerializer(list_ads, many=True)
+        return JsonResponse(ad_serializer.data, safe=False)
+
+    return JsonResponse({"error": "Invalid search type."}, safe=False)

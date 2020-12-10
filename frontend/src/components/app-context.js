@@ -14,23 +14,32 @@ const init = (initialValues) => {
 
 // https://reactjs.org/docs/hooks-reference.html#usereducer
 const reducer = (state, action) => {
-    switch (action.type) {
+    try {
+        switch (action.type) {
 
-        case Constants.APP_CONTEXT_ACTION_SET_CURRENT_PAGE:
-            return {...state, currentPage: action.payload};
+            case Constants.APP_CONTEXT_ACTION_SET_CURRENT_PAGE:
+                return {...state, currentPage: action.payload};
 
-        case Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN:
-            return {...state, isLoggedIn: action.payload};
+            case Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN:
+                return {...state, isLoggedIn: action.payload};
 
-        case Constants.APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION:
-            return {...state, autocompleteOption: action.payload};
+            case Constants.APP_CONTEXT_ACTION_SET_LIST_ITEMS:
+                return {...state, listItems: action.payload};
 
-        case Constants.APP_CONTEXT_ACTION_RESET:
-            return init(action.payload);
+            // case Constants.APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION:
+            //     return {...state, autocompleteOption: action.payload};
 
-        default:
-            throw new Error();
+            case Constants.APP_CONTEXT_ACTION_RESET:
+                return init(action.payload);
+
+            // default:
+            //     throw new Error();
+        }
+    } catch (e) {
+        console.log('reducer.e', e)
+
     }
+
 };
 
 
@@ -46,11 +55,11 @@ const AppContextProvider = props => {
 
     const initialValues = {
         currentPage: Constants.HOME_WINDOW_NAME,
-        isLoggedIn: !!token
+        isLoggedIn: !!token,
+        listItems: []
     };
 
     useEffect(() => {
-
 
 
     });

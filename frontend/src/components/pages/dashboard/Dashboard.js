@@ -30,8 +30,10 @@ import {HOME_WINDOW_NAME} from "../../Constants";
 import OperationType from "../../molecules/operation_type/OperationType";
 import PropertyType from "../../molecules/property_type/PropertyType";
 import {SearchAsynchronous} from "../../molecules/search/SearchAsynchronous";
+import {requestGetAds} from "../../molecules/search/SearchAsynchronousUtils";
 import {SearchTemplate} from "../../templates/list/SearchTemplate/SearchTemplate";
 import {SearchResultTemplate} from "../../templates/list/SearchResultTemplate/SearchResultTemplate";
+import {ListCardItems} from "../../organisms/list/ListCardItems";
 
 // import {onClickLoginButton, onClickLogoutButton} from '../login/LogInUtils'
 
@@ -131,26 +133,26 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
     const [state, dispatch] = useContext(AppContext);
+    const [open, setOpen] = React.useState(true);
 
-    console.log('state.autocompleteOption', state.autocompleteOption);
+    //console.log('state.autocompleteOption', state.autocompleteOption);
 
     const classes = useStyles();
-    const [open, setOpen] = React.useState(true);
+
+    console.log('state.listItems', state.listItems);
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
     const handleDrawerClose = () => {
         setOpen(false);
     };
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
     const onClickLoginButton = () => {
         dispatch({
             type: Constants.APP_CONTEXT_ACTION_SET_CURRENT_PAGE,
             payload: Constants.LOG_IN_WINDOW_NAME
         });
     };
-
     const onClickLogoutButton = () => {
         removeAccessTokenLocalStorage();
         dispatch({
@@ -158,6 +160,20 @@ export default function Dashboard() {
             payload: false
         });
     };
+    const handleOnChange = (newValue) => {
+        requestGetAds(newValue).then(response => {
+            console.log('handleOnChange.requestGetAds.response.data', response.data);
+
+            dispatch({
+                type: Constants.APP_CONTEXT_ACTION_SET_LIST_ITEMS,
+                payload: response.data
+            });
+
+        });
+    };
+
+    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
 
     const buttonLoginLogout = state.isLoggedIn ?
         <Button onClick={onClickLogoutButton} color="inherit">Logout</Button> :
@@ -211,11 +227,12 @@ export default function Dashboard() {
                 <SearchTemplate
                     operationTypeSelector={<OperationType/>}
                     propertyTypeSelector={<PropertyType/>}
-                    searchInput={<SearchAsynchronous url={Constants.URL_API_SEARCH_CITY_NEIGHBORHOOD}/>}
+                    searchInput={<SearchAsynchronous url={Constants.URL_API_SEARCH_CITY_NEIGHBORHOOD}
+                                                     handleOnChange={handleOnChange}/>}
                 />
 
-                <SearchResultTemplate />
-
+                {!!state.listItems.length &&
+                <SearchResultTemplate listCardItems={<ListCardItems listItems={state.listItems}/>}/>}
             </main>
         </div>
     );

@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from django.utils.timezone import now
 from rest_framework import serializers
-from backend.models import User, OperationType, Department, City, Neighborhood
+from backend.models import User, OperationType, Department, City, Neighborhood, PropertyType, Ad
 
 
 # https://nemecek.be/blog/23/how-to-createregister-user-account-with-django-rest-framework-api
@@ -37,6 +37,29 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         return User.objects.update(**validated_data)
+
+
+class PropertyTypeSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(required=True, max_length=10)
+
+    class Meta:
+        model = PropertyType
+        fields = ['id', 'name']
+
+    def create(self, validated_data):
+        """
+        Create and return a new `OperationType` instance, given the validated data.
+        """
+        return PropertyType.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `OperationType` instance, given the validated data.
+        """
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
 
 
 # https://www.django-rest-framework.org/tutorial/1-serialization/
@@ -194,7 +217,33 @@ class NeighborhoodSerializer(serializers.ModelSerializer):
         """
         Create and return a new `OperationType` instance, given the validated data.
         """
-        return OperationType.objects.create(**validated_data)
+        return Neighborhood.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `OperationType` instance, given the validated data.
+        """
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
+
+
+class AdSerializer(serializers.ModelSerializer):
+    neighborhood = NeighborhoodSerializer()  # All fields
+    user = UserSerializer()  # All fields
+    property_type = PropertyTypeSerializer()  # All fields
+    operation_type = OperationTypeSerializer()  # All fields
+
+    class Meta:
+        model = Ad
+        fields = ['id', 'neighborhood', 'user', 'property_type', 'operation_type', 'description', 'street',
+                  'house_number', 'total_area', 'built_area', 'rooms', 'bathrooms', 'parking_lots', 'antiquity', 'price']
+
+    def create(self, validated_data):
+        """
+        Create and return a new `OperationType` instance, given the validated data.
+        """
+        return Ad.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         """

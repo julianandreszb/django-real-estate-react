@@ -5,6 +5,7 @@ export const APP_CONTEXT_ACTION_SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 export const APP_CONTEXT_ACTION_RESET = 'RESET';
 export const APP_CONTEXT_ACTION_SET_IS_LOGGED_IN = 'SET_IS_LOGGED_IN';
 export const APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION = 'SET_AUTOCOMPLETE_OPTION';
+export const APP_CONTEXT_ACTION_SET_LIST_ITEMS = 'SET_LIST_ITEMS';
 //endregion
 
 //region PAGES COMPONENT NAMES
@@ -21,6 +22,7 @@ export const URL_API_LOGIN_USER = 'api/user/login';
 export const URL_API_OPERATION_TYPES = 'api/operation_types';
 export const URL_API_PROPERTY_TYPES = 'api/property_types';
 export const URL_API_SEARCH_CITY_NEIGHBORHOOD = 'api/search_city_neighborhood';
+export const URL_API_SEARCH_ADS = 'api/search_ads';
 
 export const URL_API_REQUEST_ACCESS_TOKEN = 'o/token/';
 export const URL_API_REQUEST_REVOKE_TOKEN = 'o/revoke_token/';

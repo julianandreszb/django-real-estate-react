@@ -82,10 +82,12 @@ function SearchAsynchronous(props) {
                 event.preventDefault();
                 console.log('onChange.previousValue', value);
                 console.log('onChange.newValue', newValue);
-                dispatch({
-                    type: Constants.APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION,
-                    payload: newValue
-                });
+                // dispatch({
+                //     type: Constants.APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION,
+                //     payload: newValue
+                // });
+                props.handleOnChange(newValue);
+
                 setValue(newValue);
 
             }}
@@ -115,7 +117,8 @@ function SearchAsynchronous(props) {
 }
 
 SearchAsynchronous.propTypes = {
-    "url": PropTypes.string.isRequired
+    "url": PropTypes.string.isRequired,
+    "handleOnChange": PropTypes.func.isRequired
 };
 
 export {SearchAsynchronous};

@@ -18,7 +18,7 @@ import {SearchAsynchronous} from '../../molecules/search/SearchAsynchronous'
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import {removeAccessTokenLocalStorage} from "../../Utils";
-import {ListItems} from '../../organisms/list/ListItems'
+import {ListCardItems} from '../../organisms/list/ListCardItems'
 import {SearchTemplate} from "../../templates/list/SearchTemplate/SearchTemplate";
 import Drawer from "@material-ui/core/Drawer";
 
