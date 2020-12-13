@@ -77,8 +77,7 @@ class Ad(models.Model):
     property_type = models.ForeignKey(PropertyType, on_delete=models.CASCADE, related_name="pt_ads", default=None)
     operation_type = models.ForeignKey(OperationType, on_delete=models.CASCADE, related_name="ot_ads", default=None)
     description = models.TextField(max_length=500)
-    street = models.TextField(max_length=100)
-    house_number = models.CharField(max_length=30)
+    address = models.TextField(max_length=100)
     total_area = models.IntegerField()
     built_area = models.IntegerField()
     rooms = models.IntegerField()
@@ -95,8 +94,7 @@ class Ad(models.Model):
             "property_type": self.property_type,
             "operation_type": self.operation_type,
             "description": self.description,
-            "street": self.street,
-            "house_number": self.house_number,
+            "address": self.address,
             "total_area": self.total_area,
             "built_area": self.built_area,
             "rooms": self.rooms,

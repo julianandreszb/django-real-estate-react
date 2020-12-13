@@ -1,6 +1,7 @@
 import json
 from django.contrib.auth import authenticate
 from django.core import serializers
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -15,9 +16,9 @@ from .serializers import UserSerializer, OperationTypeSerializerFrontEnd, \
 
 from oauth2_provider.models import AccessToken, RefreshToken
 
-
 # from rest_framework.authtoken.views import ObtainAuthToken
 # from rest_framework.authtoken.models import Token
+from .utils import Utils
 
 
 @protected_resource()
@@ -163,16 +164,37 @@ def search_city_neighborhood(request, q):
     return JsonResponse(list_result, safe=False)
 
 
-def search_ads(request, search_type, pk):
+def search_ads(request, search_type, pk, page):
+    per_page = 9
+
     if search_type == 'neighborhood':
 
         list_ads = Ad.objects.filter(neighborhood__id__exact=pk)
-        ad_serializer = AdSerializer(list_ads, many=True)
-        return JsonResponse(ad_serializer.data, safe=False)
+
+        paginator = Paginator(list_ads, per_page)
+        page_obj = paginator.page(page)
+        ad_serializer = AdSerializer(page_obj, many=True)
+
+        json_paginator = Utils.get_json_paginator_information(page_obj)
+
+        return JsonResponse({
+            "list_items": ad_serializer.data,
+            'paginator': json_paginator
+        }, safe=False)
+
     elif search_type == 'city':
 
         list_ads = Ad.objects.filter(neighborhood__city_id__exact=pk)
-        ad_serializer = AdSerializer(list_ads, many=True)
-        return JsonResponse(ad_serializer.data, safe=False)
+
+        paginator = Paginator(list_ads, per_page)
+        page_obj = paginator.page(page)
+        ad_serializer = AdSerializer(page_obj, many=True)
+
+        json_paginator = Utils.get_json_paginator_information(page_obj)
+
+        return JsonResponse({
+            'list_items': ad_serializer.data,
+            'paginator': json_paginator
+        }, safe=False)
 
     return JsonResponse({"error": "Invalid search type."}, safe=False)

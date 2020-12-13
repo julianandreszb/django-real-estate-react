@@ -23,8 +23,12 @@ const reducer = (state, action) => {
             case Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN:
                 return {...state, isLoggedIn: action.payload};
 
-            case Constants.APP_CONTEXT_ACTION_SET_LIST_ITEMS:
-                return {...state, listItems: action.payload};
+            case Constants.APP_CONTEXT_ACTION_SET_DATA_ITEMS:
+                return {...state, dataItems: action.payload};
+
+
+            case Constants.APP_CONTEXT_ACTION_SET_SELECTED_SEARCH_RESULT:
+                return {...state, selectedSearchResult: action.payload};
 
             // case Constants.APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION:
             //     return {...state, autocompleteOption: action.payload};
@@ -53,10 +57,16 @@ const AppContextProvider = props => {
     const token = getAccessTokenLocalStorage();
     //TODO validate token
 
+    const dataItems = {
+        list_items: [],
+        paginator: {}
+    };
+
     const initialValues = {
         currentPage: Constants.HOME_WINDOW_NAME,
         isLoggedIn: !!token,
-        listItems: []
+        dataItems: dataItems,
+        selectedSearchResult: {},
     };
 
     useEffect(() => {

@@ -236,8 +236,8 @@ class AdSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ad
-        fields = ['id', 'neighborhood', 'user', 'property_type', 'operation_type', 'description', 'street',
-                  'house_number', 'total_area', 'built_area', 'rooms', 'bathrooms', 'parking_lots', 'antiquity', 'price']
+        fields = ['id', 'neighborhood', 'user', 'property_type', 'operation_type', 'description', 'address',
+                  'total_area', 'built_area', 'rooms', 'bathrooms', 'parking_lots', 'antiquity', 'price']
 
     def create(self, validated_data):
         """

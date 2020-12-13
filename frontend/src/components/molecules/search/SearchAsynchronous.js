@@ -82,14 +82,8 @@ function SearchAsynchronous(props) {
                 event.preventDefault();
                 console.log('onChange.previousValue', value);
                 console.log('onChange.newValue', newValue);
-                // dispatch({
-                //     type: Constants.APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION,
-                //     payload: newValue
-                // });
                 props.handleOnChange(newValue);
-
                 setValue(newValue);
-
             }}
             inputValue={inputValue}
             onInputChange={handleOnInputChange}

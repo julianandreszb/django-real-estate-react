@@ -34,6 +34,7 @@ import {requestGetAds} from "../../molecules/search/SearchAsynchronousUtils";
 import {SearchTemplate} from "../../templates/list/SearchTemplate/SearchTemplate";
 import {SearchResultTemplate} from "../../templates/list/SearchResultTemplate/SearchResultTemplate";
 import {ListCardItems} from "../../organisms/list/ListCardItems";
+import Pagination from "@material-ui/lab/Pagination";
 
 // import {onClickLoginButton, onClickLogoutButton} from '../login/LogInUtils'
 
@@ -128,18 +129,19 @@ const useStyles = makeStyles((theme) => ({
     },
     fixedHeight: {
         height: 240,
-    },
+    }
 }));
 
 export default function Dashboard() {
     const [state, dispatch] = useContext(AppContext);
     const [open, setOpen] = React.useState(true);
 
-    //console.log('state.autocompleteOption', state.autocompleteOption);
+    const {list_items, paginator} = state.dataItems;
+    console.log('state.selectedSearchResult', state.selectedSearchResult);
+    console.log('state.dataItems', state.dataItems);
+
 
     const classes = useStyles();
-
-    console.log('state.listItems', state.listItems);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -160,19 +162,36 @@ export default function Dashboard() {
             payload: false
         });
     };
-    const handleOnChange = (newValue) => {
-        requestGetAds(newValue).then(response => {
-            console.log('handleOnChange.requestGetAds.response.data', response.data);
+    const handleOnSearchChange = (selectedSearchResult) => {
 
+        if (selectedSearchResult) {
             dispatch({
-                type: Constants.APP_CONTEXT_ACTION_SET_LIST_ITEMS,
-                payload: response.data
+                type: Constants.APP_CONTEXT_ACTION_SET_SELECTED_SEARCH_RESULT,
+                payload: selectedSearchResult
             });
 
+            requestGetAds(selectedSearchResult, 1).then(response => {
+                console.log('handleOnSearchChange.requestGetAds.response.data', response.data);
+                dispatch({
+                    type: Constants.APP_CONTEXT_ACTION_SET_DATA_ITEMS,
+                    payload: response.data
+                });
+            });
+        }
+    };
+
+    const handleOnPaginationChange = (event, page) => {
+
+        requestGetAds(state.selectedSearchResult, page).then(response => {
+            console.log('handleOnPaginationChange.requestGetAds.response.data', response.data);
+            dispatch({
+                type: Constants.APP_CONTEXT_ACTION_SET_DATA_ITEMS,
+                payload: response.data
+            });
         });
     };
 
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+    // const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
 
     const buttonLoginLogout = state.isLoggedIn ?
@@ -227,12 +246,29 @@ export default function Dashboard() {
                 <SearchTemplate
                     operationTypeSelector={<OperationType/>}
                     propertyTypeSelector={<PropertyType/>}
-                    searchInput={<SearchAsynchronous url={Constants.URL_API_SEARCH_CITY_NEIGHBORHOOD}
-                                                     handleOnChange={handleOnChange}/>}
+                    searchInput={
+                        <SearchAsynchronous
+                            url={Constants.URL_API_SEARCH_CITY_NEIGHBORHOOD}
+                            handleOnChange={handleOnSearchChange}
+                        />
+                    }
                 />
 
-                {!!state.listItems.length &&
-                <SearchResultTemplate listCardItems={<ListCardItems listItems={state.listItems}/>}/>}
+                {!!list_items.length && !!paginator &&
+                <SearchResultTemplate
+                    listCardItems={
+                        <ListCardItems listItems={list_items}/>
+                    }
+                    pagination={
+                        <Pagination
+                            count={paginator.num_pages}
+                            page={paginator.number}
+                            size="large"
+                            color="primary"
+                            onChange={handleOnPaginationChange}
+                        />
+                    }
+                />}
             </main>
         </div>
     );

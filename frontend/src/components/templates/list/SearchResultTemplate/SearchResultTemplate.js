@@ -41,9 +41,16 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(6),
     },
-}));
+    pagination_container: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: theme.spacing(4),
+        marginBottom: theme.spacing(4),
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    }
+}));
 
 function SearchResultTemplate(props) {
 
@@ -52,13 +59,17 @@ function SearchResultTemplate(props) {
     return (
         <Container className={classes.cardGrid} maxWidth="md">
             {props.listCardItems}
+            <div className={classes.pagination_container}>
+                {props.pagination}
+            </div>
         </Container>
 
     );
 }
 
 SearchResultTemplate.propTypes = {
-    "listCardItems": PropTypes.element.isRequired
+    "listCardItems": PropTypes.element.isRequired,
+    "pagination": PropTypes.element.isRequired
 };
 
 export {SearchResultTemplate}
