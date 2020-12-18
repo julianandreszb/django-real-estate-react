@@ -20,15 +20,20 @@ const reducer = (state, action) => {
             case Constants.APP_CONTEXT_ACTION_SET_CURRENT_PAGE:
                 return {...state, currentPage: action.payload};
 
+            case Constants.APP_CONTEXT_ACTION_SET_DASHBOARD_SUB_COMPONENT:
+                return {...state, dashboardSubComponent: action.payload};
+
             case Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN:
                 return {...state, isLoggedIn: action.payload};
 
             case Constants.APP_CONTEXT_ACTION_SET_DATA_ITEMS:
                 return {...state, dataItems: action.payload};
 
-
             case Constants.APP_CONTEXT_ACTION_SET_SELECTED_SEARCH_RESULT:
                 return {...state, selectedSearchResult: action.payload};
+
+            case Constants.APP_CONTEXT_ACTION_SET_AD_OBJECT:
+                return {...state, adObject: action.payload};
 
             // case Constants.APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION:
             //     return {...state, autocompleteOption: action.payload};
@@ -64,9 +69,12 @@ const AppContextProvider = props => {
 
     const initialValues = {
         currentPage: Constants.HOME_WINDOW_NAME,
+        //dashboardSubComponent: Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS,
+        dashboardSubComponent: Constants.DASHBOARD_SUB_COMPONENT_CREATE_AD,
         isLoggedIn: !!token,
         dataItems: dataItems,
         selectedSearchResult: {},
+        adObject: {},
     };
 
     useEffect(() => {

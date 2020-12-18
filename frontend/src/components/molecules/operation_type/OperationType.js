@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function PropertyType(props) {
+export default function OperationType(props) {
 
     const [operationTypes, setOperationTypes] = useState([]);
     const [optionType, setOptionType] = React.useState(1);
@@ -37,20 +37,23 @@ export default function PropertyType(props) {
     };
 
     return (
-        <TextField
-            id="outlined-select-currency"
-            select
-            label="Select"
-            value={optionType}
-            onChange={handleChange}
-            // helperText="Please select your option"
-            variant="outlined"
-        >
-            {operationTypes.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                </MenuItem>
-            ))}
-        </TextField>
+        <div className={classes.root}>
+            <TextField
+
+                id="outlined-select-currency"
+                select
+                label="Operation Type"
+                value={optionType}
+                onChange={handleChange}
+                // helperText="Please select your option"
+                variant="outlined"
+            >
+                {operationTypes.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                    </MenuItem>
+                ))}
+            </TextField>
+        </div>
     );
 }

@@ -4,9 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from "axios";
 import PropTypes from "prop-types";
-import {LoadingDialog} from "../dialogs/Dialogs";
 import {AppContext} from "../../app-context";
-import * as Constants from "../../Constants";
 
 const CancelToken = axios.CancelToken;
 let cancel;
@@ -62,7 +60,7 @@ function SearchAsynchronous(props) {
 
     return (
         <Autocomplete
-            id="asynchronous-demo"
+            id="search-asynchronous"
             freeSolo={true}
             style={{width: 300}}
             open={open}
@@ -93,7 +91,7 @@ function SearchAsynchronous(props) {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Asynchronous"
+                    label={props.label}
                     variant="outlined"
                     InputProps={{
                         ...params.InputProps,
@@ -112,7 +110,8 @@ function SearchAsynchronous(props) {
 
 SearchAsynchronous.propTypes = {
     "url": PropTypes.string.isRequired,
-    "handleOnChange": PropTypes.func.isRequired
+    "handleOnChange": PropTypes.func.isRequired,
+    "label" : PropTypes.string.isRequired
 };
 
 export {SearchAsynchronous};

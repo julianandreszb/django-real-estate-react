@@ -198,3 +198,9 @@ def search_ads(request, search_type, pk, page):
         }, safe=False)
 
     return JsonResponse({"error": "Invalid search type."}, safe=False)
+
+
+def search_ad_by_id(request, pk):
+    ad = Ad.objects.get(pk=pk)
+    ad_serializer = AdSerializer(ad, many=False)
+    return JsonResponse(ad_serializer.data, safe=False)

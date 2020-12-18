@@ -15,20 +15,20 @@ function SearchTemplate(props) {
     const classes = useStyles(theme);
 
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
             <Box my={4}>
                 <Typography variant="h4" component="h1" gutterBottom>
                     Search Template
                 </Typography>
                 <form className={classes.form}>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={4}>
                             {props.operationTypeSelector}
                         </Grid>
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={4}>
                             {props.propertyTypeSelector}
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={4}>
                             {props.searchInput}
                         </Grid>
                     </Grid>

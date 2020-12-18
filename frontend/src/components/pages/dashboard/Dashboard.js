@@ -1,9 +1,8 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
-import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -11,51 +10,90 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import {mainListItems, secondaryListItems} from './listItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
 import Button from "@material-ui/core/Button";
 import * as Constants from "../../Constants";
 import {removeAccessTokenLocalStorage} from "../../Utils";
 import {AppContext} from "../../app-context";
 import {HOME_WINDOW_NAME} from "../../Constants";
+import {requestGetAds} from "../../molecules/search/SearchAsynchronousUtils";
+import {LoadingDialog} from "../../molecules/dialogs/Dialogs";
+import {SearchTemplate} from "../../templates/list/SearchTemplate/SearchTemplate";
 import OperationType from "../../molecules/operation_type/OperationType";
 import PropertyType from "../../molecules/property_type/PropertyType";
 import {SearchAsynchronous} from "../../molecules/search/SearchAsynchronous";
-import {requestGetAds} from "../../molecules/search/SearchAsynchronousUtils";
-import {SearchTemplate} from "../../templates/list/SearchTemplate/SearchTemplate";
-import {SearchResultTemplate} from "../../templates/list/SearchResultTemplate/SearchResultTemplate";
-import {ListCardItems} from "../../organisms/list/ListCardItems";
 import Pagination from "@material-ui/lab/Pagination";
+import {ListCardItems} from "../../organisms/list/ListCardItems";
+import {SearchResultTemplate} from "../../templates/list/SearchResultTemplate/SearchResultTemplate";
+import {ViewAdTemplate} from "../../templates/view/ViewAdTemplate/ViewAdTemplate";
+import {CardViewImage} from "../../molecules/cards/CardViewImage";
+import {GridListImageSelector} from "../../molecules/GridList/GridListImageSelector";
+import {CardViewMainDescription} from "../../molecules/cards/CardViewMainDescription";
+import {CardViewSecondaryDescription} from "../../molecules/cards/CardViewSecondaryDescription";
+import {GridCharacteristics} from "../../molecules/GridList/GridCharacteristics";
+import {CreateAd} from "../../organisms/ad/CreateAd";
+import {CreateAdTemplate} from "../../templates/ad/CreateAdTemplate/CreateAdTemplate";
 
-// import {onClickLoginButton, onClickLogoutButton} from '../login/LogInUtils'
-
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+const itemsData = [
+    {
+        img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+        title: 'Breakfast',
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+        title: 'Burger',
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
+        title: 'Camera',
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
+        title: 'Coffee',
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
+        title: 'Hats',
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
+        title: 'Honey',
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
+        title: 'Basketball',
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
+        title: 'Fern',
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
+        title: 'Mushrooms',
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
+        title: 'Tomato basil',
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
+        title: 'Sea star',
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
+        title: 'Bike',
+    },
+];
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        backgroundColor: '#f5f5f5'
     },
     toolbar: {
         paddingRight: 24, // keep right padding when drawer closed
@@ -135,10 +173,13 @@ const useStyles = makeStyles((theme) => ({
 export default function Dashboard() {
     const [state, dispatch] = useContext(AppContext);
     const [open, setOpen] = React.useState(true);
+    const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
 
     const {list_items, paginator} = state.dataItems;
     console.log('state.selectedSearchResult', state.selectedSearchResult);
     console.log('state.dataItems', state.dataItems);
+    console.log('state.dashboardSubComponent', state.dashboardSubComponent);
+    console.log('state.adObject', state.adObject);
 
 
     const classes = useStyles();
@@ -162,15 +203,24 @@ export default function Dashboard() {
             payload: false
         });
     };
+
+    const onCloseLoadingDialog = () => {
+        console.log('onCloseLoadingDialog');
+    };
+
     const handleOnSearchChange = (selectedSearchResult) => {
 
         if (selectedSearchResult) {
+
+            setOpenLoadingDialog(true);
+
             dispatch({
                 type: Constants.APP_CONTEXT_ACTION_SET_SELECTED_SEARCH_RESULT,
                 payload: selectedSearchResult
             });
 
             requestGetAds(selectedSearchResult, 1).then(response => {
+                setOpenLoadingDialog(false);
                 console.log('handleOnSearchChange.requestGetAds.response.data', response.data);
                 dispatch({
                     type: Constants.APP_CONTEXT_ACTION_SET_DATA_ITEMS,
@@ -181,8 +231,9 @@ export default function Dashboard() {
     };
 
     const handleOnPaginationChange = (event, page) => {
-
+        setOpenLoadingDialog(true);
         requestGetAds(state.selectedSearchResult, page).then(response => {
+            setOpenLoadingDialog(false);
             console.log('handleOnPaginationChange.requestGetAds.response.data', response.data);
             dispatch({
                 type: Constants.APP_CONTEXT_ACTION_SET_DATA_ITEMS,
@@ -243,6 +294,7 @@ export default function Dashboard() {
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
 
+                {/*{state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS &&*/}
                 <SearchTemplate
                     operationTypeSelector={<OperationType/>}
                     propertyTypeSelector={<PropertyType/>}
@@ -250,11 +302,12 @@ export default function Dashboard() {
                         <SearchAsynchronous
                             url={Constants.URL_API_SEARCH_CITY_NEIGHBORHOOD}
                             handleOnChange={handleOnSearchChange}
-                        />
+                            label={"Search neighborhood or city"}/>
                     }
                 />
+                {/*}*/}
 
-                {!!list_items.length && !!paginator &&
+                {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS && !!list_items.length && !!paginator &&
                 <SearchResultTemplate
                     listCardItems={
                         <ListCardItems listItems={list_items}/>
@@ -269,7 +322,49 @@ export default function Dashboard() {
                         />
                     }
                 />}
+
+                {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_VIEW_AD && state.adObject &&
+                <ViewAdTemplate
+                    CardViewImage={
+                        <CardViewImage img={itemsData[0].img}/>
+                    }
+                    GridListImageSelector={
+                        <GridListImageSelector itemsData={itemsData}/>
+                    }
+                    CardViewMainDescription={
+                        <CardViewMainDescription ad={state.adObject}/>
+                    }
+                    CardViewSecondaryDescription={
+                        <CardViewSecondaryDescription ad={state.adObject}/>
+                    }
+                    GridCharacteristics={
+                        <GridCharacteristics ad={state.adObject}/>
+                    }
+                />
+                }
+
+                {/*{state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_CREATE_AD &&*/}
+                <CreateAdTemplate createAd={
+                    <CreateAd
+                        operationTypeSelector={<OperationType/>}
+                        propertyTypeSelector={<PropertyType/>}
+                        searchNeighborhoodInput={
+                            <SearchAsynchronous
+                                url={Constants.URL_API_SEARCH_CITY_NEIGHBORHOOD}
+                                handleOnChange={() => { alert('searchNeighborhoodInput.handleOnChange') }}
+                                label={"Search neighborhood"}/>
+                        }
+                    />
+                }/>
+                {/*}*/}
+
             </main>
+            <LoadingDialog
+                dialogContentText={Constants.MESSAGE_LOADING_ADS}
+                onClose={onCloseLoadingDialog}
+                open={openLoadingDialog}
+                dialogTitle={Constants.TITLE_LOADING_DIALOG}
+            />
         </div>
     );
 }

@@ -57,7 +57,7 @@ function SearchResultTemplate(props) {
     const classes = useStyles();
 
     return (
-        <Container className={classes.cardGrid} maxWidth="md">
+        <Container className={classes.cardGrid} maxWidth={false}>
             {props.listCardItems}
             <div className={classes.pagination_container}>
                 {props.pagination}
