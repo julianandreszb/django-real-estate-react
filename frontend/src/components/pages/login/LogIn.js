@@ -106,16 +106,16 @@ export default function (props) {
 
         if (!!responseLogInUser && !!responseLogInUser.data) {
 
-            let responseAccessToken;
+            let accessToken;
 
             if (typeof responseLogInUser.data.access_token !== 'undefined' &&
                 typeof responseLogInUser.data.refresh_token !== 'undefined') {
 
-                saveAccessTokenLocalStorage(responseLogInUser);
-                responseAccessToken = getAccessTokenLocalStorage();
+                saveAccessTokenLocalStorage(responseLogInUser.data);
+                accessToken = getAccessTokenLocalStorage();
             } else {
 
-                responseAccessToken = await requestAccessToken(dataForm)
+                accessToken = await requestAccessToken(dataForm)
                     .then(responseAccessToken => {
                         console.log('requestAccessToken.responseAccessToken', responseAccessToken);
 
@@ -123,7 +123,8 @@ export default function (props) {
                         const accessToken = getAccessTokenLocalStorage();
                         console.log('accessToken', accessToken);
 
-                        return responseAccessToken;
+                        // return responseAccessToken;
+                        return accessToken;
                     }).catch(function (error) {
                         console.log('requestAccessToken.catch.error', error.response);
                         handleRequestAccessTokenError(error);
@@ -131,7 +132,13 @@ export default function (props) {
                     });
             }
 
-            if (!!responseAccessToken) {
+            console.log('LogIn.js.accessToken', accessToken);
+
+            if (!!accessToken) {
+                dispatch({
+                    type: Constants.APP_CONTEXT_ACTION_SET_TOKEN,
+                    payload: accessToken
+                });
                 dispatch({
                     type: Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN,
                     payload: true

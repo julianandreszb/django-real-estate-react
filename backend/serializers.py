@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from django.utils.timezone import now
 from rest_framework import serializers
-from backend.models import User, OperationType, Department, City, Neighborhood, PropertyType, Ad
+from backend.models import User, OperationType, Department, City, Neighborhood, PropertyType, Ad, Resource
 
 
 # https://nemecek.be/blog/23/how-to-createregister-user-account-with-django-rest-framework-api
@@ -229,6 +229,20 @@ class NeighborhoodSerializer(serializers.ModelSerializer):
 
 
 class AdSerializer(serializers.ModelSerializer):
+    @property
+    def errors_as_array_object(self):
+        """
+        Returns full errors formatted as per requirements
+        """
+        default_errors = self.errors  # default errors dict
+        errors_messages = []
+        counter = 0
+        for field_name, field_errors in default_errors.items():
+            for field_error in field_errors:
+                errors_messages.append({"key": counter, "value": f"{field_name}: {field_error}"})
+                counter += 1
+        return {'errors': errors_messages}
+
     neighborhood = NeighborhoodSerializer()  # All fields
     user = UserSerializer()  # All fields
     property_type = PropertyTypeSerializer()  # All fields
@@ -244,6 +258,43 @@ class AdSerializer(serializers.ModelSerializer):
         Create and return a new `OperationType` instance, given the validated data.
         """
         return Ad.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `OperationType` instance, given the validated data.
+        """
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
+
+
+class ResourceSerializer(serializers.ModelSerializer):
+    @property
+    def errors_as_array_object(self):
+        """
+        Returns full errors formatted as per requirements
+        """
+        default_errors = self.errors  # default errors dict
+        errors_messages = []
+        counter = 0
+        for field_name, field_errors in default_errors.items():
+            for field_error in field_errors:
+                errors_messages.append({"key": counter, "value": f"{field_name}: {field_error}"})
+                counter += 1
+        return {'errors': errors_messages}
+
+    # ad = AdSerializer()
+
+    class Meta:
+        model = Resource
+        # fields = ['id', 'type', 'file_path', 'ad']
+        fields = ['id', 'file']
+
+    def create(self, validated_data):
+        """
+        Create and return a new `OperationType` instance, given the validated data.
+        """
+        return Resource.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         """

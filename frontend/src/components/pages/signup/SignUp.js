@@ -118,6 +118,11 @@ export default function (props) {
                 });
 
             if (!!responseAccessToken) {
+                const {access_token} = responseAccessToken.data;
+                dispatch({
+                    type: Constants.APP_CONTEXT_ACTION_SET_TOKEN,
+                    payload: access_token
+                });
                 dispatch({
                     type: Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN,
                     payload: true

@@ -8,6 +8,7 @@ import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import PropTypes from 'prop-types'
+import {requestCreateAd} from './CreateAdUtils'
 
 import {TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER} from "../../Constants";
 import {requestLogIn} from "../../pages/login/LogInUtils";
@@ -19,6 +20,7 @@ import {
 } from "../../Utils";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {GridCharacteristics} from "../../molecules/GridList/GridCharacteristics";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -44,12 +46,46 @@ function CreateAd(props) {
 
     const [state, dispatch] = useContext(AppContext);
 
+
+    console.log('state.token', state.token);
+
+    const SUPPORTED_FORMATS = [
+        "image/jpg",
+        "image/jpeg",
+        "image/gif",
+        "image/png"
+    ];
+
     console.log('LogIn.state.currentPage', state.currentPage);
 
     const classes = useStyles();
     const schema = yup.object().shape({
-        email: yup.string().email().required(),
-        password: yup.string().required(),
+        zip: yup.string(),
+        address: yup.string().required(),
+        totalArea: yup.number().required(),
+        builtArea: yup.number().required(),
+        rooms: yup.number().required(),
+        bathrooms: yup.number().required(),
+        parkingLots: yup.number().required(),
+        antiquity: yup.number().required(),
+        price: yup.number().required(),
+        imageOne: yup
+            .mixed()
+            .required("A file is required")
+            .test(
+                "fileSize",
+                "File too large",
+                (value) => {
+                    return value && value[0].size <= 2000000
+                }
+            )
+            .test(
+                "type",
+                "Unsupported Format",
+                (value) => {
+                    return value && SUPPORTED_FORMATS.includes(value[0].type)
+                }
+            )
     });
     const {register, handleSubmit, errors} = useForm({
         resolver: yupResolver(schema)
@@ -65,7 +101,46 @@ function CreateAd(props) {
         //TODO
     };
 
-    const onSubmit = async dataForm => {
+    const onSubmit = async (dataForm) => {
+
+        console.log('onSubmit.dataForm', dataForm);
+
+
+        //TODO USING MULTI-PART FORM
+        // const data = new FormData();
+        // data.append('address', dataForm.address);
+        // data.append('antiquity', dataForm.antiquity);
+        // data.append('bathrooms', dataForm.bathrooms);
+        // data.append('builtArea', dataForm.builtArea);
+        // data.append('imageOne', dataForm.imageOne[0]);
+        // data.append('file', dataForm.imageOne[0]);
+        // data.append('parkingLots', dataForm.parkingLots);
+        // data.append('price', dataForm.price);
+        // data.append('rooms', dataForm.rooms);
+        // data.append('totalArea', dataForm.totalArea);
+        // data.append('zip', dataForm.zip);
+
+        //TODO Using JSON OBJECT
+        const data = {
+            'neighborhood': 3001,
+            'property_type': 2,
+            'operation_type': 2,
+            'description' : 'TEST',
+            'address': dataForm.address,
+            'total_area': dataForm.totalArea,
+            'built_area': dataForm.builtArea,
+            'rooms': dataForm.rooms,
+            'bathrooms': dataForm.bathrooms,
+            'parking_lots': dataForm.parkingLots,
+            'antiquity': dataForm.antiquity,
+            // 'file': dataForm.imageOne,
+            'price': dataForm.price,
+            'zip': dataForm.zip
+        };
+
+        await requestCreateAd(data, state.token);
+
+        // const data = new FormData();
 
         // setOpenLoadingDialog(true);
         //
@@ -133,44 +208,157 @@ function CreateAd(props) {
             </Typography>
             <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={2}>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
                         {props.operationTypeSelector}
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
                         {props.propertyTypeSelector}
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
                         {props.searchNeighborhoodInput}
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
                         <TextField
                             type="text"
-                            name="email"
+                            name="zip"
                             variant="outlined"
                             fullWidth
-                            id="email"
-                            label="Email Address"
-                            autoComplete="email"
+                            id="zip"
+                            label="ZIP"
+                            autoComplete="postal-code"
                             inputRef={register}
-                            error={!!errors.email}
-                            helperText={errors.email?.message}
+                            error={!!errors.zip}
+                            helperText={errors.zip?.message}
                         />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} md={12} lg={6} xl={6}>
                         <TextField
-                            type="password"
-                            name="password"
+                            type="text"
+                            name="address"
                             variant="outlined"
                             fullWidth
-                            id="password"
-                            label="Password"
-                            autoComplete="current-password"
+                            id="address"
+                            label="Address"
+                            autoComplete="street-address"
                             inputRef={register}
-                            error={!!errors.password}
-                            helperText={errors.password?.message}
+                            error={!!errors.address}
+                            helperText={errors.address?.message}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
+                        <TextField
+                            type="number"
+                            name="totalArea"
+                            variant="outlined"
+                            fullWidth
+                            id="totalArea"
+                            label="Total Area (m²)"
+                            inputRef={register}
+                            error={!!errors.totalArea}
+                            helperText={errors.totalArea?.message}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
+                        <TextField
+                            type="number"
+                            name="builtArea"
+                            variant="outlined"
+                            fullWidth
+                            id="builtArea"
+                            label="Built Area (m²)"
+                            inputRef={register}
+                            error={!!errors.builtArea}
+                            helperText={errors.builtArea?.message}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
+                        <TextField
+                            type="number"
+                            name="rooms"
+                            variant="outlined"
+                            fullWidth
+                            id="rooms"
+                            label="Rooms"
+                            inputRef={register}
+                            error={!!errors.rooms}
+                            helperText={errors.rooms?.message}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
+                        <TextField
+                            type="number"
+                            name="bathrooms"
+                            variant="outlined"
+                            fullWidth
+                            id="bathrooms"
+                            label="Bathrooms"
+                            inputRef={register}
+                            error={!!errors.bathrooms}
+                            helperText={errors.bathrooms?.message}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
+                        <TextField
+                            type="number"
+                            name="parkingLots"
+                            variant="outlined"
+                            fullWidth
+                            id="parkingLots"
+                            label="Parking Lots"
+                            inputRef={register}
+                            error={!!errors.parkingLots}
+                            helperText={errors.parkingLots?.message}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
+                        <TextField
+                            type="number"
+                            name="antiquity"
+                            variant="outlined"
+                            fullWidth
+                            id="antiquity"
+                            label="Antiquity (Years)"
+                            inputRef={register}
+                            error={!!errors.antiquity}
+                            helperText={errors.antiquity?.message}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
+                        <TextField
+                            type="number"
+                            name="price"
+                            variant="outlined"
+                            fullWidth
+                            id="price"
+                            label="price"
+                            inputRef={register}
+                            error={!!errors.price}
+                            helperText={errors.price?.message}
                         />
                     </Grid>
                 </Grid>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
+                        <TextField
+                            type="file"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            name="imageOne"
+                            variant="outlined"
+                            fullWidth
+                            id="imageOne"
+                            label="Image 1"
+                            inputRef={register}
+                            error={!!errors.imageOne}
+                            helperText={errors.imageOne?.message}
+                        />
+                    </Grid>
+                </Grid>
+                <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                    Submit
+                </Button>
             </form>
         </div>
     );

@@ -39,11 +39,11 @@ import {CreateAdTemplate} from "../../templates/ad/CreateAdTemplate/CreateAdTemp
 
 const itemsData = [
     {
-        img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+        img: 'http://127.0.0.1:8000/static/images/2020-12-14_23-51.png',
         title: 'Breakfast',
     },
     {
-        img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+        img: 'http://127.0.0.1:8000/media/1546366.jpg',
         title: 'Burger',
     },
     {
@@ -307,7 +307,7 @@ export default function Dashboard() {
                 />
                 {/*}*/}
 
-                {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS && !!list_items.length && !!paginator &&
+                {/*{state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS && !!list_items.length && !!paginator &&*/}
                 <SearchResultTemplate
                     listCardItems={
                         <ListCardItems listItems={list_items}/>
@@ -321,7 +321,8 @@ export default function Dashboard() {
                             onChange={handleOnPaginationChange}
                         />
                     }
-                />}
+                />
+                {/*}*/}
 
                 {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_VIEW_AD && state.adObject &&
                 <ViewAdTemplate
@@ -350,7 +351,7 @@ export default function Dashboard() {
                         propertyTypeSelector={<PropertyType/>}
                         searchNeighborhoodInput={
                             <SearchAsynchronous
-                                url={Constants.URL_API_SEARCH_CITY_NEIGHBORHOOD}
+                                url={Constants.URL_API_SEARCH_NEIGHBORHOOD}
                                 handleOnChange={() => { alert('searchNeighborhoodInput.handleOnChange') }}
                                 label={"Search neighborhood"}/>
                         }

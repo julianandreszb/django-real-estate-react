@@ -72,10 +72,10 @@ class Ad(models.Model):
     class Meta:
         db_table = "backend_ad"
 
-    neighborhood = models.ForeignKey(Neighborhood, on_delete=models.CASCADE, related_name="n_ads")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="u_ads")
-    property_type = models.ForeignKey(PropertyType, on_delete=models.CASCADE, related_name="pt_ads", default=None)
-    operation_type = models.ForeignKey(OperationType, on_delete=models.CASCADE, related_name="ot_ads", default=None)
+    neighborhood = models.ForeignKey(Neighborhood, on_delete=models.CASCADE, related_name="neighborhood_ads")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_ads")
+    property_type = models.ForeignKey(PropertyType, on_delete=models.CASCADE, related_name="property_type_ads",default=None)
+    operation_type = models.ForeignKey(OperationType, on_delete=models.CASCADE, related_name="operation_type_ads",default=None)
     description = models.TextField(max_length=500)
     address = models.TextField(max_length=100)
     total_area = models.IntegerField()
@@ -102,4 +102,22 @@ class Ad(models.Model):
             "parking_lots": self.parking_lots,
             "antiquity": self.antiquity,
             "price": self.price
+        }
+
+
+class Resource(models.Model):
+    class Meta:
+        db_table = "backend_resource"
+
+    # ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name="ad_resources")
+    # type = models.TextField(max_length=10)
+    # file_path = models.TextField(max_length=100)
+    file = models.FileField(blank=False, null=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            # "ad": self.ad,
+            # "type": self.type,
+            "file": self.file
         }

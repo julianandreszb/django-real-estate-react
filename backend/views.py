@@ -1,23 +1,20 @@
 import json
 from django.contrib.auth import authenticate
-from django.core import serializers
+from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from oauth2_provider.decorators import protected_resource
-# from oauth2_provider import
-from rest_framework.authtoken.models import Token
-from rest_framework.parsers import JSONParser
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 
+from realestate.settings import MEDIA_ROOT
 from .models import OperationType, PropertyType, City, Neighborhood, Ad
 from .serializers import UserSerializer, OperationTypeSerializerFrontEnd, \
-    PropertyTypeSerializerFrontEnd, CitySerializer, NeighborhoodSerializer, AdSerializer
+    PropertyTypeSerializerFrontEnd, CitySerializer, NeighborhoodSerializer, AdSerializer, ResourceSerializer
 
 from oauth2_provider.models import AccessToken, RefreshToken
-
-# from rest_framework.authtoken.views import ObtainAuthToken
-# from rest_framework.authtoken.models import Token
 from .utils import Utils
 
 
@@ -204,3 +201,131 @@ def search_ad_by_id(request, pk):
     ad = Ad.objects.get(pk=pk)
     ad_serializer = AdSerializer(ad, many=False)
     return JsonResponse(ad_serializer.data, safe=False)
+
+
+def search_neighborhood(request, q):
+    # Search for Neighborhoods
+    list_neighborhoods = Neighborhood.objects.filter(name__contains=q)
+    neighborhood_serializer = NeighborhoodSerializer(list_neighborhoods, many=True)
+
+    return JsonResponse(neighborhood_serializer.data, safe=False)
+
+
+# https://chrisbartos.com/articles/uploading-images-drf/
+# @api_view(['POST'])
+# @parser_classes([FormParser, MultiPartParser])
+# @protected_resource()
+def ad_create(request):
+    if request.method == "POST":
+        # data = FormParser().parse(request)
+        data = JSONParser().parse(request)
+
+        user = request.user
+        # neighborhood = Neighborhood.objects.get(pk=data["neighborhood"])
+        # property_type = PropertyType.objects.get(pk=data["property_type"])
+        # operation_type = OperationType.objects.get(pk=data["operation_type"])
+        description = data["description"]
+        address = data["address"]
+        total_area = data["total_area"]
+        built_area = data["built_area"]
+        rooms = data["rooms"]
+        bathrooms = data["bathrooms"]
+        parking_lots = data["parking_lots"]
+        antiquity = data["antiquity"]
+        price = data["price"]
+        zip = data["zip"]
+
+        ad = Ad(user_id=11,
+                neighborhood_id=data["neighborhood"],
+                property_type_id=data["property_type"],
+                operation_type_id=data["operation_type"],
+                description=description,
+                address=address,
+                total_area=total_area,
+                built_area=built_area,
+                rooms=rooms,
+                bathrooms=bathrooms,
+                parking_lots=parking_lots,
+                antiquity=antiquity,
+                price=price
+                )
+        ad.save()
+
+        # data = JSONParser().parse(request)
+        # serializer = AdSerializer(data=data)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return JsonResponse(serializer.data, status=201)
+        #
+
+        return JsonResponse(
+            data["description"]
+            , safe=False)
+
+        # return JsonResponse({
+        #     # 'neighborhood': neighborhood,
+        #     # 'user': user,
+        #     # 'property_type': property_type,
+        #     # 'operation_type': operation_type,
+        #     'description': description,
+        #     'address': address,
+        #     'total_area': total_area,
+        #     'built_area': built_area,
+        #     'rooms': rooms,
+        #     'bathrooms': bathrooms,
+        #     'parking_lots': parking_lots,
+        #     'antiquity': antiquity,
+        #     'price': price,
+        # }, safe=False)
+
+        # ---------------------------------------------------------------------------------
+
+        # data = FormParser().parse(request)
+        # data = MultiPartParser().parse(request)
+        # serializer = ResourceSerializer(data=data)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return JsonResponse(serializer.data, status=201)
+
+        # return JsonResponse({
+        #     "uploaded_file_url": 'uploaded_file_url'
+        # })
+        # return JsonResponse(serializer.errors_as_array_object, status=400)
+
+    # def ad_create(request):
+    #     if request.method == "POST":
+    #
+    #
+    #         # TODO TEST THIS USING Class Based Views https://stackoverrun.com/es/q/8300506
+    #         # TODO if it does not work, create the Ad object manually
+    # ------------------------------------------------------------
+
+    # return JsonResponse({
+    #     "address": request.POST["address"]
+    # })
+
+    # json_data = json.loads(request.body)
+
+    # data = JSONParser().parse(request)
+    # serializer = AdSerializer(data=data)
+    # if serializer.is_valid():
+    #     serializer.save()
+    #     return JsonResponse(serializer.data, status=201)
+    # return JsonResponse(serializer.errors_as_array_object, status=400)
+
+    # ----------------------------------------------------------------------------------
+
+    # ad = Ad()
+    #
+    # tmp_file = request.FILES['file']
+    # fs = FileSystemStorage(MEDIA_ROOT)
+    # filename = fs.save(tmp_file.name, tmp_file)
+    # uploaded_file_url = fs.url(filename)
+    #
+    # return JsonResponse({
+    #     "uploaded_file_url": uploaded_file_url
+    # })
+    #
+    return JsonResponse({
+        "address": request.POST["address"]
+    })

@@ -9,6 +9,7 @@ export const APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION = 'SET_AUTOCOMPLETE_OPTI
 export const APP_CONTEXT_ACTION_SET_DATA_ITEMS = 'SET_LIST_ITEMS';
 export const APP_CONTEXT_ACTION_SET_SELECTED_SEARCH_RESULT = 'SET_SELECTED_SEARCH_RESULT';
 export const APP_CONTEXT_ACTION_SET_AD_OBJECT = 'SET_AD_OBJECT';
+export const APP_CONTEXT_ACTION_SET_TOKEN = 'SET_TOKEN';
 //endregion
 
 //region PAGES COMPONENT NAMES
@@ -26,11 +27,13 @@ export const DASHBOARD_SUB_COMPONENT_CREATE_AD = 'createAd';
 //region API URLS
 export const URL_API_CREATE_USER = 'api/user/create';
 export const URL_API_LOGIN_USER = 'api/user/login';
+export const URL_API_CREATE_AD = 'api/ad/create';
 // export const URL_API_LOGIN_USER = 'api/user/api-token-auth';
 
 export const URL_API_OPERATION_TYPES = 'api/operation_types';
 export const URL_API_PROPERTY_TYPES = 'api/property_types';
 export const URL_API_SEARCH_CITY_NEIGHBORHOOD = 'api/search_city_neighborhood';
+export const URL_API_SEARCH_NEIGHBORHOOD = 'api/search_neighborhood';
 export const URL_API_SEARCH_ADS = 'api/search_ads';
 export const URL_API_SEARCH_AD_BY_ID = 'api/ad';
 

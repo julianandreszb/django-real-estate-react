@@ -112,6 +112,10 @@ export function requestValidateToken() {
 
 export function saveAccessTokenLocalStorage(accessTokenData) {
     const {access_token, refresh_token} = accessTokenData;
+
+    console.log('saveAccessTokenLocalStorage.access_token', access_token);
+    console.log('saveAccessTokenLocalStorage.refresh_token', refresh_token);
+
     localStorage.setItem('access_token', access_token);
     localStorage.setItem('refresh_token', refresh_token);
 }
@@ -142,5 +146,5 @@ export function getUserLocalStorage(){
 }
 
 export function getAccessTokenLocalStorage() {
-    return localStorage.getItem('access_token');
+    return localStorage.getItem('access_token') || '';
 }

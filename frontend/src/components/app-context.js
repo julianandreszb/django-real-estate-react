@@ -35,6 +35,9 @@ const reducer = (state, action) => {
             case Constants.APP_CONTEXT_ACTION_SET_AD_OBJECT:
                 return {...state, adObject: action.payload};
 
+            case Constants.APP_CONTEXT_ACTION_SET_TOKEN:
+                return {...state, token: action.payload};
+
             // case Constants.APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION:
             //     return {...state, autocompleteOption: action.payload};
 
@@ -72,6 +75,7 @@ const AppContextProvider = props => {
         //dashboardSubComponent: Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS,
         dashboardSubComponent: Constants.DASHBOARD_SUB_COMPONENT_CREATE_AD,
         isLoggedIn: !!token,
+        token: token,
         dataItems: dataItems,
         selectedSearchResult: {},
         adObject: {},
