@@ -22,8 +22,8 @@ import {HOME_WINDOW_NAME} from "../../Constants";
 import {requestGetAds} from "../../molecules/search/SearchAsynchronousUtils";
 import {LoadingDialog} from "../../molecules/dialogs/Dialogs";
 import {SearchTemplate} from "../../templates/list/SearchTemplate/SearchTemplate";
-import OperationType from "../../molecules/operation_type/OperationType";
-import PropertyType from "../../molecules/property_type/PropertyType";
+import {OperationType} from "../../molecules/operation_type/OperationType";
+import {PropertyType} from "../../molecules/property_type/PropertyType";
 import {SearchAsynchronous} from "../../molecules/search/SearchAsynchronous";
 import Pagination from "@material-ui/lab/Pagination";
 import {ListCardItems} from "../../organisms/list/ListCardItems";
@@ -296,8 +296,12 @@ export default function Dashboard() {
 
                 {/*{state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS &&*/}
                 <SearchTemplate
-                    operationTypeSelector={<OperationType/>}
-                    propertyTypeSelector={<PropertyType/>}
+                    operationTypeSelector={<OperationType handleOnChange={(value) => {
+                        console.log('Dashboard.SearchTemplate.operationTypeSelector.OperationType.handleOnChange')
+                    }}/>}
+                    propertyTypeSelector={<PropertyType handleOnChange={(value) => {
+                        console.log('Dashboard.SearchTemplate.propertyTypeSelector.PropertyType.handleOnChange')
+                    }}/>}
                     searchInput={
                         <SearchAsynchronous
                             url={Constants.URL_API_SEARCH_CITY_NEIGHBORHOOD}
@@ -346,16 +350,7 @@ export default function Dashboard() {
 
                 {/*{state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_CREATE_AD &&*/}
                 <CreateAdTemplate createAd={
-                    <CreateAd
-                        operationTypeSelector={<OperationType/>}
-                        propertyTypeSelector={<PropertyType/>}
-                        searchNeighborhoodInput={
-                            <SearchAsynchronous
-                                url={Constants.URL_API_SEARCH_NEIGHBORHOOD}
-                                handleOnChange={() => { alert('searchNeighborhoodInput.handleOnChange') }}
-                                label={"Search neighborhood"}/>
-                        }
-                    />
+                    <CreateAd/>
                 }/>
                 {/*}*/}
 

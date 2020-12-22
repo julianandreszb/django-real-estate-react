@@ -7,10 +7,10 @@ import {AppContext} from "../../app-context";
 import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
-import PropTypes from 'prop-types'
+
 import {requestCreateAd} from './CreateAdUtils'
 
-import {TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER} from "../../Constants";
+import {TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER_TITLE} from "../../Constants";
 import {requestLogIn} from "../../pages/login/LogInUtils";
 import {
     getAccessTokenLocalStorage,
@@ -21,6 +21,10 @@ import {
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {GridCharacteristics} from "../../molecules/GridList/GridCharacteristics";
 import Button from "@material-ui/core/Button";
+import {OperationType} from "../../molecules/operation_type/OperationType";
+import {PropertyType} from "../../molecules/property_type/PropertyType";
+import {SearchAsynchronous} from "../../molecules/search/SearchAsynchronous";
+import {AlertDialog} from "../../molecules/dialogs/Dialogs";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -45,6 +49,15 @@ const useStyles = makeStyles((theme) => ({
 function CreateAd(props) {
 
     const [state, dispatch] = useContext(AppContext);
+    const [neighborhoodId, setNeighborhoodId] = useState(null);
+    const [operationTypeId, setOperationTypeId] = useState(1);
+    const [propertyTypeId, setPropertyTypeId] = useState(1);
+
+    //region AlertDialog states
+    const [openAlertDialog, setOpenAlertDialog] = useState(false);
+    const [alertDialogTitle, setAlertDialogTitle] = useState("");
+    const [alertDialogContentText, setAlertDialogContentText] = useState("");
+    //endregion
 
 
     console.log('state.token', state.token);
@@ -62,6 +75,7 @@ function CreateAd(props) {
     const schema = yup.object().shape({
         zip: yup.string(),
         address: yup.string().required(),
+        description: yup.string().required(),
         totalArea: yup.number().required(),
         builtArea: yup.number().required(),
         rooms: yup.number().required(),
@@ -92,7 +106,7 @@ function CreateAd(props) {
     });
 
     const handleCreateUserError = error => {
-        // setAlertDialogTitle(TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER);
+        // setAlertDialogTitle(TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER_TITLE);
         // setAlertDialogContentText("");
         // setAlertDialogContentTextList(error.response.data.errors);
         // setOpenAlertDialog(true);
@@ -103,42 +117,63 @@ function CreateAd(props) {
 
     const onSubmit = async (dataForm) => {
 
+
+        console.log('onSubmit.neighborhoodId', neighborhoodId);
+        console.log('onSubmit.operationTypeId', operationTypeId);
+        console.log('onSubmit.propertyTypeId', propertyTypeId);
         console.log('onSubmit.dataForm', dataForm);
 
+        if (!!!neighborhoodId) {
+            setAlertDialogTitle(Constants.TITLE_ALERT_DIALOG_ERROR_EMPTY_NEIGHBORHOOD_TITLE);
+            setAlertDialogContentText('Neighborhood is required');
+            setOpenAlertDialog(true);
+            return;
+        }
 
-        //TODO USING MULTI-PART FORM
-        // const data = new FormData();
-        // data.append('address', dataForm.address);
-        // data.append('antiquity', dataForm.antiquity);
-        // data.append('bathrooms', dataForm.bathrooms);
-        // data.append('builtArea', dataForm.builtArea);
-        // data.append('imageOne', dataForm.imageOne[0]);
-        // data.append('file', dataForm.imageOne[0]);
-        // data.append('parkingLots', dataForm.parkingLots);
-        // data.append('price', dataForm.price);
-        // data.append('rooms', dataForm.rooms);
-        // data.append('totalArea', dataForm.totalArea);
-        // data.append('zip', dataForm.zip);
+
+        console.log('dataForm.imageOne', dataForm.imageOne);
+
+        // //TODO USING MULTI-PART FORM
+        const data = new FormData();
+        data.append('neighborhood', neighborhoodId);
+        data.append('property_type', propertyTypeId);
+        data.append('operation_type', operationTypeId);
+        data.append('description', dataForm.description);
+        data.append('address', dataForm.address);
+        data.append('total_area', dataForm.totalArea);
+        data.append('built_area', dataForm.builtArea);
+        data.append('rooms', dataForm.rooms);
+        data.append('bathrooms', dataForm.bathrooms);
+        data.append('parking_lots', dataForm.parkingLots);
+        data.append('antiquity', dataForm.antiquity);
+        data.append('file', dataForm.imageOne[0]);
+        data.append('price', dataForm.price);
+        data.append('zip', dataForm.zip);
+
 
         //TODO Using JSON OBJECT
-        const data = {
-            'neighborhood': 3001,
-            'property_type': 2,
-            'operation_type': 2,
-            'description' : 'TEST',
-            'address': dataForm.address,
-            'total_area': dataForm.totalArea,
-            'built_area': dataForm.builtArea,
-            'rooms': dataForm.rooms,
-            'bathrooms': dataForm.bathrooms,
-            'parking_lots': dataForm.parkingLots,
-            'antiquity': dataForm.antiquity,
-            // 'file': dataForm.imageOne,
-            'price': dataForm.price,
-            'zip': dataForm.zip
-        };
+        // const data = {
+        //     'neighborhood': neighborhoodId,
+        //     'property_type': propertyTypeId,
+        //     'operation_type': operationTypeId,
+        //     'description': dataForm.description,
+        //     'address': dataForm.address,
+        //     'total_area': dataForm.totalArea,
+        //     'built_area': dataForm.builtArea,
+        //     'rooms': dataForm.rooms,
+        //     'bathrooms': dataForm.bathrooms,
+        //     'parking_lots': dataForm.parkingLots,
+        //     'antiquity': dataForm.antiquity,
+        //     // 'file': dataForm.imageOne,
+        //     'price': dataForm.price,
+        //     'zip': dataForm.zip
+        // };
 
-        await requestCreateAd(data, state.token);
+        const requestCreateAdResult = await requestCreateAd(data, state.token).then((response) => {
+
+        });
+
+        console.log('CreateAd.requestCreateAdResult', requestCreateAdResult);
 
         // const data = new FormData();
 
@@ -209,13 +244,28 @@ function CreateAd(props) {
             <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
-                        {props.operationTypeSelector}
+                        <OperationType handleOnChange={(value) => {
+                            console.log('CreateAd.SearchTemplate.operationTypeSelector.OperationType.handleOnChange');
+                            setOperationTypeId(value);
+                        }}/>
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
-                        {props.propertyTypeSelector}
+                        <PropertyType handleOnChange={(value) => {
+                            console.log('CreateAd.SearchTemplate.propertyTypeSelector.PropertyType.handleOnChange');
+                            setPropertyTypeId(value)
+                        }}/>
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
-                        {props.searchNeighborhoodInput}
+                        <SearchAsynchronous
+                            url={Constants.URL_API_SEARCH_NEIGHBORHOOD}
+                            handleOnChange={(value) => {
+                                if (!!value && value.id) {
+                                    setNeighborhoodId(value.id);
+                                } else {
+                                    setNeighborhoodId(null);
+                                }
+                            }}
+                            label={"Search neighborhood"}/>
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
                         <TextField
@@ -337,6 +387,19 @@ function CreateAd(props) {
                             helperText={errors.price?.message}
                         />
                     </Grid>
+                    <Grid item xs={12} md={12} lg={12} xl={12}>
+                        <TextField
+                            type="text"
+                            name="description"
+                            variant="outlined"
+                            fullWidth
+                            id="description"
+                            label="Description"
+                            inputRef={register}
+                            error={!!errors.description}
+                            helperText={errors.description?.message}
+                        />
+                    </Grid>
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
@@ -360,14 +423,25 @@ function CreateAd(props) {
                     Submit
                 </Button>
             </form>
+            <AlertDialog
+                dialogTitle={alertDialogTitle}
+                dialogContentText={alertDialogContentText}
+                onClose={() => {
+                    console.log('CreateAd.onCloseAlertDialog');
+
+                    setAlertDialogTitle("");
+                    setAlertDialogContentText("");
+                    setOpenAlertDialog(false);
+                }}
+                open={openAlertDialog}/>
         </div>
     );
 }
 
 CreateAd.propTypes = {
-    "operationTypeSelector": PropTypes.element.isRequired,
-    "propertyTypeSelector": PropTypes.element.isRequired,
-    "searchNeighborhoodInput": PropTypes.element.isRequired,
+    // "operationTypeSelector": PropTypes.element.isRequired,
+    // "propertyTypeSelector": PropTypes.element.isRequired,
+    // "searchNeighborhoodInput": PropTypes.element.isRequired,
 };
 
 export {CreateAd}

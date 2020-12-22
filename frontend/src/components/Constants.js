@@ -43,7 +43,8 @@ export const URL_API_REQUEST_REVOKE_TOKEN = 'o/revoke_token/';
 
 //region MESSAGES
 export const TITLE_LOADING_DIALOG = 'Please wait';
-export const TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER = 'Error creating new user';
+export const TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER_TITLE = 'Error creating new user';
+export const TITLE_ALERT_DIALOG_ERROR_EMPTY_NEIGHBORHOOD_TITLE = 'Invalid neighborhood';
 export const MESSAGE_CREATING_NEW_USER = 'Creating new user';
 export const MESSAGE_LOADING_ADS = 'Loading records';
 //endregion

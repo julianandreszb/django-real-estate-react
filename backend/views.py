@@ -5,20 +5,23 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
-from oauth2_provider.decorators import protected_resource
-from rest_framework.decorators import api_view, parser_classes
+# from oauth2_provider.decorators import protected_resource
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.decorators import api_view, parser_classes, authentication_classes, permission_classes
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
+from rest_framework.permissions import IsAuthenticated
 
 from realestate.settings import MEDIA_ROOT
-from .models import OperationType, PropertyType, City, Neighborhood, Ad
+from .models import OperationType, PropertyType, City, Neighborhood, Ad, Resource
 from .serializers import UserSerializer, OperationTypeSerializerFrontEnd, \
     PropertyTypeSerializerFrontEnd, CitySerializer, NeighborhoodSerializer, AdSerializer, ResourceSerializer
 
-from oauth2_provider.models import AccessToken, RefreshToken
+# from oauth2_provider.models import AccessToken, RefreshToken
 from .utils import Utils
+from rest_framework.authtoken.models import Token
 
 
-@protected_resource()
+# @protected_resource()
 @ensure_csrf_cookie
 def index(request):
     return render(request, 'frontend/index.html')
@@ -68,32 +71,46 @@ def user_create(request):
 def user_login(request):
     if request.method == "POST":
 
+        if request.user.is_authenticated:
+            return JsonResponse({
+                "error": "Invalid request method."
+            }, status=405)
+
         data = JSONParser().parse(request)
         serializer = UserSerializer(data=data)
         serializer.is_valid()
         user = authenticate(username=serializer.data['username'], password=serializer.data['password'])
 
         if user:
-            token_list = AccessToken.objects.filter(user=user).order_by('-id').values(
-                'token',
-                'expires',
-                'refresh_token'
-            )
 
-            if token_list:
-                oauth2_provider_accesstoken = token_list[0]
-                refresh_token = RefreshToken.objects.get(pk=oauth2_provider_accesstoken['refresh_token'])
+            token, created = Token.objects.get_or_create(user=user)
 
-                if refresh_token:
-                    return JsonResponse({
-                        'user': serializer.data,
-                        'access_token': oauth2_provider_accesstoken['token'],
-                        'refresh_token': refresh_token.token
-                    }, status=201)
-                else:
-                    return JsonResponse(serializer.data, status=201)
-            else:
-                return JsonResponse(serializer.data, status=201)
+            return JsonResponse({
+                'user': serializer.data,
+                'access_token': token.key,
+                'refresh_token': ""
+            }, status=201)
+
+            # token_list = AccessToken.objects.filter(user=user).order_by('-id').values(
+            #     'token',
+            #     'expires',
+            #     'refresh_token'
+            # )
+
+            # if token_list:
+            #     oauth2_provider_accesstoken = token_list[0]
+            #     refresh_token = RefreshToken.objects.get(pk=oauth2_provider_accesstoken['refresh_token'])
+            #
+            #     if refresh_token:
+            #         return JsonResponse({
+            #             'user': serializer.data,
+            #             'access_token': oauth2_provider_accesstoken['token'],
+            #             'refresh_token': refresh_token.token
+            #         }, status=201)
+            #     else:
+            #         return JsonResponse(serializer.data, status=201)
+            # else:
+            #     return JsonResponse(serializer.data, status=201)
         else:
             return JsonResponse({'error': 'Invalid user.'}, status=400)
 
@@ -215,30 +232,45 @@ def search_neighborhood(request, q):
 # @api_view(['POST'])
 # @parser_classes([FormParser, MultiPartParser])
 # @protected_resource()
+
+
+# @authentication_classes([SessionAuthentication, BasicAuthentication])
+# @permission_classes([IsAuthenticated])
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
 def ad_create(request):
     if request.method == "POST":
-        # data = FormParser().parse(request)
-        data = JSONParser().parse(request)
+        # TODO USING JSON
+        # data = JSONParser().parse(request)
+        # user = request.user
+        # description = data["description"]
+        # address = data["address"]
+        # total_area = data["total_area"]
+        # built_area = data["built_area"]
+        # rooms = data["rooms"]
+        # bathrooms = data["bathrooms"]
+        # parking_lots = data["parking_lots"]
+        # antiquity = data["antiquity"]
+        # price = data["price"]
+        # zip = data["zip"]
 
-        user = request.user
-        # neighborhood = Neighborhood.objects.get(pk=data["neighborhood"])
-        # property_type = PropertyType.objects.get(pk=data["property_type"])
-        # operation_type = OperationType.objects.get(pk=data["operation_type"])
-        description = data["description"]
-        address = data["address"]
-        total_area = data["total_area"]
-        built_area = data["built_area"]
-        rooms = data["rooms"]
-        bathrooms = data["bathrooms"]
-        parking_lots = data["parking_lots"]
-        antiquity = data["antiquity"]
-        price = data["price"]
-        zip = data["zip"]
+        # TODO USING MULTI-PART FORM
+        user_id = request.user.pk
+        description = request.POST["description"]
+        address = request.POST["address"]
+        total_area = request.POST["total_area"]
+        built_area = request.POST["built_area"]
+        rooms = request.POST["rooms"]
+        bathrooms = request.POST["bathrooms"]
+        parking_lots = request.POST["parking_lots"]
+        antiquity = request.POST["antiquity"]
+        price = request.POST["price"]
+        zip = request.POST["zip"]
 
-        ad = Ad(user_id=11,
-                neighborhood_id=data["neighborhood"],
-                property_type_id=data["property_type"],
-                operation_type_id=data["operation_type"],
+        ad = Ad(user_id=user_id,
+                neighborhood_id=request.POST["neighborhood"],
+                property_type_id=request.POST["property_type"],
+                operation_type_id=request.POST["operation_type"],
                 description=description,
                 address=address,
                 total_area=total_area,
@@ -247,7 +279,8 @@ def ad_create(request):
                 bathrooms=bathrooms,
                 parking_lots=parking_lots,
                 antiquity=antiquity,
-                price=price
+                price=price,
+                zip=zip
                 )
         ad.save()
 
@@ -258,9 +291,16 @@ def ad_create(request):
         #     return JsonResponse(serializer.data, status=201)
         #
 
-        return JsonResponse(
-            data["description"]
-            , safe=False)
+        #     return JsonResponse(
+        #         request.user.pk
+        #         # request.POST["description"]
+        #         # "Authenticated"
+        #         , safe=False)
+        #
+        # return JsonResponse(
+        #     # request.POST["description"]
+        #     "NonAuthenticated"
+        #     , safe=False)
 
         # return JsonResponse({
         #     # 'neighborhood': neighborhood,
@@ -292,40 +332,46 @@ def ad_create(request):
         # })
         # return JsonResponse(serializer.errors_as_array_object, status=400)
 
-    # def ad_create(request):
-    #     if request.method == "POST":
-    #
-    #
-    #         # TODO TEST THIS USING Class Based Views https://stackoverrun.com/es/q/8300506
-    #         # TODO if it does not work, create the Ad object manually
-    # ------------------------------------------------------------
+        # def ad_create(request):
+        #     if request.method == "POST":
+        #
+        #
+        #         # TODO TEST THIS USING Class Based Views https://stackoverrun.com/es/q/8300506
+        #         # TODO if it does not work, create the Ad object manually
+        # ------------------------------------------------------------
+
+        # return JsonResponse({
+        #     "address": request.POST["address"]
+        # })
+
+        # json_data = json.loads(request.body)
+
+        # data = JSONParser().parse(request)
+        # serializer = AdSerializer(data=data)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return JsonResponse(serializer.data, status=201)
+        # return JsonResponse(serializer.errors_as_array_object, status=400)
+
+        # ----------------------------------------------------------------------------------
+
+        # THIS IS WORKING
+        tmp_file = request.FILES['file']
+        fs = FileSystemStorage(MEDIA_ROOT)
+        filename = fs.save(tmp_file.name, tmp_file)
+        uploaded_file_url = fs.url(filename)
+        # UNTIL HERE - THIS IS WORKING
+
+        resource = Resource(ad_id=ad.pk, file_path=uploaded_file_url, type='img')
+        resource.save()
+
+        #
+        return JsonResponse({
+            "uploaded_file_url": uploaded_file_url,
+            "ad.pk": ad.pk,
+            "resource.pk": resource.pk
+        })
 
     # return JsonResponse({
     #     "address": request.POST["address"]
     # })
-
-    # json_data = json.loads(request.body)
-
-    # data = JSONParser().parse(request)
-    # serializer = AdSerializer(data=data)
-    # if serializer.is_valid():
-    #     serializer.save()
-    #     return JsonResponse(serializer.data, status=201)
-    # return JsonResponse(serializer.errors_as_array_object, status=400)
-
-    # ----------------------------------------------------------------------------------
-
-    # ad = Ad()
-    #
-    # tmp_file = request.FILES['file']
-    # fs = FileSystemStorage(MEDIA_ROOT)
-    # filename = fs.save(tmp_file.name, tmp_file)
-    # uploaded_file_url = fs.url(filename)
-    #
-    # return JsonResponse({
-    #     "uploaded_file_url": uploaded_file_url
-    # })
-    #
-    return JsonResponse({
-        "address": request.POST["address"]
-    })

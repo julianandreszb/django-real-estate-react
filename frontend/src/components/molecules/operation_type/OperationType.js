@@ -3,6 +3,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import {requestGetAllOperationTypes} from './OperationTypeUtils';
+import PropTypes from 'prop-types'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -14,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function OperationType(props) {
+function OperationType(props) {
 
     const [operationTypes, setOperationTypes] = useState([]);
     const [optionType, setOptionType] = React.useState(1);
@@ -34,6 +35,7 @@ export default function OperationType(props) {
 
     const handleChange = (event) => {
         setOptionType(event.target.value);
+        props.handleOnChange(event.target.value)
     };
 
     return (
@@ -57,3 +59,9 @@ export default function OperationType(props) {
         </div>
     );
 }
+
+OperationType.propTypes = {
+    "handleOnChange": PropTypes.func.isRequired
+};
+
+export {OperationType}

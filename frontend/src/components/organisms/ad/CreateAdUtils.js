@@ -14,13 +14,8 @@ export function requestCreateAd(data, token) {
         method: 'post',
         url: Constants.URL_API_CREATE_AD,
         data: data,
-        // data: {
-        //     "username": data.email,
-        //     "password": data.password,
-        // },
-
         headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Token ${token}`,
             'X-CSRFToken': getCookie('csrftoken')
         }
     });

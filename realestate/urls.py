@@ -7,7 +7,7 @@ admin.autodiscover()
 
 urlpatterns = [
                   path('', include('frontend.urls')),
-                  path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+                  # path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
                   path('admin/', admin.site.urls),
                   path('api/', include('backend.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

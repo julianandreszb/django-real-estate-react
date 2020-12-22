@@ -251,7 +251,7 @@ class AdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ad
         fields = ['id', 'neighborhood', 'user', 'property_type', 'operation_type', 'description', 'address',
-                  'total_area', 'built_area', 'rooms', 'bathrooms', 'parking_lots', 'antiquity', 'price']
+                  'total_area', 'built_area', 'rooms', 'bathrooms', 'parking_lots', 'antiquity', 'price', 'zip']
 
     def create(self, validated_data):
         """
@@ -287,8 +287,8 @@ class ResourceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resource
-        # fields = ['id', 'type', 'file_path', 'ad']
-        fields = ['id', 'file']
+        fields = ['id', 'type', 'file_path', 'ad']
+        # fields = ['id', 'file_path']
 
     def create(self, validated_data):
         """

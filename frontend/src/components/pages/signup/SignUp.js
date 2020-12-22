@@ -7,7 +7,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
-import {SIGN_UP_WINDOW_NAME, TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER} from "../../Constants";
+import {SIGN_UP_WINDOW_NAME, TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER_TITLE} from "../../Constants";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -71,7 +71,7 @@ export default function (props) {
     });
 
     const handleCreateUserError = error => {
-        setAlertDialogTitle(TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER);
+        setAlertDialogTitle(TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER_TITLE);
         setAlertDialogContentText("");
         setAlertDialogContentTextList(error.response.data.errors);
         setOpenAlertDialog(true);

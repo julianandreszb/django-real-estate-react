@@ -37,25 +37,28 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'backend.apps.BackendConfig',
     'frontend.apps.FrontendConfig',
-    'oauth2_provider',
+    # 'oauth2_provider',
     'rest_framework',
     'rest_framework.authtoken'
 ]
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
     'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'},
-    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+    # 'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
 }
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authtoken'
+        # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         # 'rest_framework.authentication.SessionAuthentication',
-        # 'oauth2_provider.ext.rest_framework.OAuth2Authentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
 
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     )
 }
 
