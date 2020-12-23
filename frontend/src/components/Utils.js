@@ -111,27 +111,21 @@ export function requestValidateToken() {
 }
 
 export function saveAccessTokenLocalStorage(accessTokenData) {
-    const {access_token, refresh_token} = accessTokenData;
-
+    const {access_token} = accessTokenData;
     console.log('saveAccessTokenLocalStorage.access_token', access_token);
-    console.log('saveAccessTokenLocalStorage.refresh_token', refresh_token);
-
     localStorage.setItem('access_token', access_token);
-    localStorage.setItem('refresh_token', refresh_token);
 }
 
 export function removeAccessTokenLocalStorage() {
     localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
 }
 
 export function saveUserLocalStorage(userData) {
-    const {email,first_name,last_name,password,username} = userData;
+    const {email,first_name,last_name,username} = userData;
 
     localStorage.setItem('email', email);
     localStorage.setItem('first_name', first_name);
     localStorage.setItem('last_name', last_name);
-    localStorage.setItem('password', password);
     localStorage.setItem('username', username);
 }
 
@@ -139,10 +133,9 @@ export function getUserLocalStorage(){
     const email = localStorage.getItem('email');
     const first_name = localStorage.getItem('first_name');
     const last_name = localStorage.getItem('last_name');
-    const password = localStorage.getItem('password');
     const username = localStorage.getItem('username');
 
-    return {email, first_name, last_name, password, username};
+    return {email, first_name, last_name, username};
 }
 
 export function getAccessTokenLocalStorage() {

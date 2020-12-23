@@ -18,8 +18,11 @@ function GridListImageSelector(props) {
     return (
         <GridList cellHeight={160} className={classes.gridList} cols={1}>
             {props.itemsData.map((tile) => (
-                <GridListTile key={tile.img} cols={tile.cols || 1}>
-                    <img src={tile.img} alt={tile.title}/>
+                // <GridListTile key={tile.img} cols={tile.cols || 1}>
+                //     <img src={tile.img} alt={tile.title}/>
+                // </GridListTile>
+                <GridListTile key={tile.id} cols={tile.cols || 1}>
+                    <img src={tile.file_path} alt={tile.file_path}/>
                 </GridListTile>
             ))}
         </GridList>

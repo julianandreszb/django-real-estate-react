@@ -294,7 +294,7 @@ export default function Dashboard() {
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
 
-                {/*{state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS &&*/}
+                {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS &&
                 <SearchTemplate
                     operationTypeSelector={<OperationType handleOnChange={(value) => {
                         console.log('Dashboard.SearchTemplate.operationTypeSelector.OperationType.handleOnChange')
@@ -309,9 +309,9 @@ export default function Dashboard() {
                             label={"Search neighborhood or city"}/>
                     }
                 />
-                {/*}*/}
+                }
 
-                {/*{state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS && !!list_items.length && !!paginator &&*/}
+                {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS && !!list_items.length && !!paginator &&
                 <SearchResultTemplate
                     listCardItems={
                         <ListCardItems listItems={list_items}/>
@@ -326,15 +326,17 @@ export default function Dashboard() {
                         />
                     }
                 />
-                {/*}*/}
+                }
 
                 {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_VIEW_AD && state.adObject &&
                 <ViewAdTemplate
                     CardViewImage={
-                        <CardViewImage img={itemsData[0].img}/>
+                        // <CardViewImage img={itemsData[0].img}/>
+                        <CardViewImage img={state.adObject.resources[0].file_path}/>
                     }
                     GridListImageSelector={
-                        <GridListImageSelector itemsData={itemsData}/>
+                        // <GridListImageSelector itemsData={itemsData}/>
+                        <GridListImageSelector itemsData={state.adObject.resources}/>
                     }
                     CardViewMainDescription={
                         <CardViewMainDescription ad={state.adObject}/>
@@ -348,11 +350,11 @@ export default function Dashboard() {
                 />
                 }
 
-                {/*{state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_CREATE_AD &&*/}
+                {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_CREATE_AD &&
                 <CreateAdTemplate createAd={
                     <CreateAd/>
                 }/>
-                {/*}*/}
+                }
 
             </main>
             <LoadingDialog

@@ -72,8 +72,8 @@ const AppContextProvider = props => {
 
     const initialValues = {
         currentPage: Constants.HOME_WINDOW_NAME,
-        //dashboardSubComponent: Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS,
-        dashboardSubComponent: Constants.DASHBOARD_SUB_COMPONENT_CREATE_AD,
+        dashboardSubComponent: Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS,
+        // dashboardSubComponent: Constants.DASHBOARD_SUB_COMPONENT_CREATE_AD,
         isLoggedIn: !!token,
         token: token,
         dataItems: dataItems,

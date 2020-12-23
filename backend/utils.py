@@ -1,3 +1,7 @@
+from django.core.files.storage import FileSystemStorage
+from realestate.settings import MEDIA_ROOT
+
+
 class Utils:
 
     @staticmethod
@@ -17,3 +21,9 @@ class Utils:
             json_paginator['next_page_number'] = page.next_page_number()
 
         return json_paginator
+
+    @staticmethod
+    def save_image_file(image_file):
+        fs = FileSystemStorage(MEDIA_ROOT)
+        filename = fs.save(image_file.name, image_file)
+        return fs.url(filename)

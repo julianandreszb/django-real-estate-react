@@ -7,17 +7,17 @@ import PropTypes from "prop-types";
  *
  * @returns Promise
  */
-async function requestGetAdById(requestData) {
+async function requestGetAdById(adId) {
 
-    console.log('requestGetAdById.requestData', requestData);
+    console.log('requestGetAdById.adId', adId);
 
-    if (!requestData) {
+    if (!adId) {
         return {};
     }
 
     return axios({
         method: 'get',
-        url: `${Constants.URL_API_SEARCH_AD_BY_ID}/${requestData.id}`,
+        url: `${Constants.URL_API_SEARCH_AD_BY_ID}/${adId}`,
         data: {},
         headers: {
             'X-CSRFToken': getCookie('csrftoken')

@@ -25,6 +25,7 @@ import {OperationType} from "../../molecules/operation_type/OperationType";
 import {PropertyType} from "../../molecules/property_type/PropertyType";
 import {SearchAsynchronous} from "../../molecules/search/SearchAsynchronous";
 import {AlertDialog} from "../../molecules/dialogs/Dialogs";
+import {requestGetAdById} from "../list/ListCardItemsUtils";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -71,6 +72,40 @@ function CreateAd(props) {
 
     console.log('LogIn.state.currentPage', state.currentPage);
 
+    const fileValidationRequired = yup
+        .mixed()
+        .required("A file is required")
+        .test(
+            "fileSize",
+            "File too large",
+            (value) => {
+                return value && value[0].size <= 2000000
+            }
+        )
+        .test(
+            "type",
+            "Unsupported Format",
+            (value) => {
+                return value && SUPPORTED_FORMATS.includes(value[0].type)
+            }
+        );
+    const fileValidationOptional = yup
+        .mixed()
+        .test(
+            "fileSize",
+            "File too large",
+            (value) => {
+                return value && value[0].size <= 2000000
+            }
+        )
+        .test(
+            "type",
+            "Unsupported Format",
+            (value) => {
+                return value && SUPPORTED_FORMATS.includes(value[0].type)
+            }
+        );
+
     const classes = useStyles();
     const schema = yup.object().shape({
         zip: yup.string(),
@@ -83,23 +118,11 @@ function CreateAd(props) {
         parkingLots: yup.number().required(),
         antiquity: yup.number().required(),
         price: yup.number().required(),
-        imageOne: yup
-            .mixed()
-            .required("A file is required")
-            .test(
-                "fileSize",
-                "File too large",
-                (value) => {
-                    return value && value[0].size <= 2000000
-                }
-            )
-            .test(
-                "type",
-                "Unsupported Format",
-                (value) => {
-                    return value && SUPPORTED_FORMATS.includes(value[0].type)
-                }
-            )
+        image1: fileValidationRequired,
+        image2: fileValidationOptional,
+        image3: fileValidationOptional,
+        image4: fileValidationOptional,
+        image5: fileValidationOptional,
     });
     const {register, handleSubmit, errors} = useForm({
         resolver: yupResolver(schema)
@@ -130,10 +153,9 @@ function CreateAd(props) {
             return;
         }
 
-
         console.log('dataForm.imageOne', dataForm.imageOne);
 
-        // //TODO USING MULTI-PART FORM
+        // Axios interprets this data as MULTI-PART FORM
         const data = new FormData();
         data.append('neighborhood', neighborhoodId);
         data.append('property_type', propertyTypeId);
@@ -146,7 +168,21 @@ function CreateAd(props) {
         data.append('bathrooms', dataForm.bathrooms);
         data.append('parking_lots', dataForm.parkingLots);
         data.append('antiquity', dataForm.antiquity);
-        data.append('file', dataForm.imageOne[0]);
+        if (!!dataForm.image1) {
+            data.append('image1', dataForm.image1[0]);
+        }
+        if (!!dataForm.image2) {
+            data.append('image2', dataForm.image2[0]);
+        }
+        if (!!dataForm.image3) {
+            data.append('image3', dataForm.image3[0]);
+        }
+        if (!!dataForm.image4) {
+            data.append('image4', dataForm.image4[0]);
+        }
+        if (!!dataForm.image5) {
+            data.append('image5', dataForm.image5[0]);
+        }
         data.append('price', dataForm.price);
         data.append('zip', dataForm.zip);
 
@@ -170,70 +206,25 @@ function CreateAd(props) {
         // };
 
         const requestCreateAdResult = await requestCreateAd(data, state.token).then((response) => {
-
+            return response.data;
         });
 
-        console.log('CreateAd.requestCreateAdResult', requestCreateAdResult);
+        console.log('CreateAd.requestCreateAd.requestCreateAdResult', requestCreateAdResult);
 
-        // const data = new FormData();
+        // const adResponse = await requestGetAdById(requestCreateAdResult.id).then(response => {
+        //     return response;
+        // });
 
-        // setOpenLoadingDialog(true);
-        //
-        // const responseLogInUser = await requestLogIn(dataForm)
-        //     .then(responseLogIn => {
-        //         console.log('requestLogIn.responseLogIn', responseLogIn);
-        //
-        //         saveUserLocalStorage(responseLogIn);
-        //
-        //         setOpenLoadingDialog(false);
-        //         return responseLogIn;
-        //     }).catch(function (error) {
-        //         console.log('requestLogIn.catch.error', error.response);
-        //         setOpenLoadingDialog(false);
-        //         handleCreateUserError(error);
-        //         return null;
-        //     });
-        //
-        // console.log('responseLogInUser', responseLogInUser);
-        //
-        // if (!!responseLogInUser && !!responseLogInUser.data) {
-        //
-        //     let responseAccessToken;
-        //
-        //     if (typeof responseLogInUser.data.access_token !== 'undefined' &&
-        //         typeof responseLogInUser.data.refresh_token !== 'undefined') {
-        //
-        //         saveAccessTokenLocalStorage(responseLogInUser);
-        //         responseAccessToken = getAccessTokenLocalStorage();
-        //     } else {
-        //
-        //         responseAccessToken = await requestAccessToken(dataForm)
-        //             .then(responseAccessToken => {
-        //                 console.log('requestAccessToken.responseAccessToken', responseAccessToken);
-        //
-        //                 saveAccessTokenLocalStorage(responseAccessToken.data);
-        //                 const accessToken = getAccessTokenLocalStorage();
-        //                 console.log('accessToken', accessToken);
-        //
-        //                 return responseAccessToken;
-        //             }).catch(function (error) {
-        //                 console.log('requestAccessToken.catch.error', error.response);
-        //                 handleRequestAccessTokenError(error);
-        //                 return null;
-        //             });
-        //     }
-        //
-        //     if (!!responseAccessToken) {
-        //         dispatch({
-        //             type: Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN,
-        //             payload: true
-        //         });
-        //         dispatch({
-        //             type: Constants.APP_CONTEXT_ACTION_SET_CURRENT_PAGE,
-        //             payload: Constants.HOME_WINDOW_NAME
-        //         });
-        //     }
-        // }
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_AD_OBJECT,
+            payload: requestCreateAdResult
+        });
+
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_DASHBOARD_SUB_COMPONENT,
+            payload: Constants.DASHBOARD_SUB_COMPONENT_VIEW_AD
+        });
+
     };
 
     return (
@@ -408,16 +399,81 @@ function CreateAd(props) {
                             InputLabelProps={{
                                 shrink: true,
                             }}
-                            name="imageOne"
+                            name="image1"
                             variant="outlined"
                             fullWidth
-                            id="imageOne"
+                            id="image1"
                             label="Image 1"
                             inputRef={register}
-                            error={!!errors.imageOne}
-                            helperText={errors.imageOne?.message}
+                            error={!!errors.image1}
+                            helperText={errors.image1?.message}
                         />
                     </Grid>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
+                        <TextField
+                            type="file"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            name="image2"
+                            variant="outlined"
+                            fullWidth
+                            id="image2"
+                            label="Image 2"
+                            inputRef={register}
+                            error={!!errors.image2}
+                            helperText={errors.image2?.message}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
+                        <TextField
+                            type="file"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            name="image3"
+                            variant="outlined"
+                            fullWidth
+                            id="image3"
+                            label="Image 3"
+                            inputRef={register}
+                            error={!!errors.image3}
+                            helperText={errors.image3?.message}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
+                        <TextField
+                            type="file"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            name="image4"
+                            variant="outlined"
+                            fullWidth
+                            id="image4"
+                            label="Image 4"
+                            inputRef={register}
+                            error={!!errors.image4}
+                            helperText={errors.image4?.message}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3} xl={3}>
+                        <TextField
+                            type="file"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            name="image5"
+                            variant="outlined"
+                            fullWidth
+                            id="image5"
+                            label="Image 5"
+                            inputRef={register}
+                            error={!!errors.image5}
+                            helperText={errors.image5?.message}
+                        />
+                    </Grid>
+                    <span>{errors.imageOne?.message}</span>
                 </Grid>
                 <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                     Submit

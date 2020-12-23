@@ -1,7 +1,9 @@
 from django.contrib.auth.hashers import make_password
-from django.utils.timezone import now
 from rest_framework import serializers
 from backend.models import User, OperationType, Department, City, Neighborhood, PropertyType, Ad, Resource
+
+
+# from .resource_serializer import ResourceSerializer
 
 
 # https://nemecek.be/blog/23/how-to-createregister-user-account-with-django-rest-framework-api
@@ -23,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email', "first_name", "last_name", "password")
-        # extra_kwargs = {'password': {'write_only': True}} # Uncomment to avoid returning password in response
+        extra_kwargs = {'password': {'write_only': True}}  # Uncomment to avoid returning password in response
 
     def create(self, validated_data):
         # return User.objects.create(**validated_data)
@@ -228,46 +230,6 @@ class NeighborhoodSerializer(serializers.ModelSerializer):
         return instance
 
 
-class AdSerializer(serializers.ModelSerializer):
-    @property
-    def errors_as_array_object(self):
-        """
-        Returns full errors formatted as per requirements
-        """
-        default_errors = self.errors  # default errors dict
-        errors_messages = []
-        counter = 0
-        for field_name, field_errors in default_errors.items():
-            for field_error in field_errors:
-                errors_messages.append({"key": counter, "value": f"{field_name}: {field_error}"})
-                counter += 1
-        return {'errors': errors_messages}
-
-    neighborhood = NeighborhoodSerializer()  # All fields
-    user = UserSerializer()  # All fields
-    property_type = PropertyTypeSerializer()  # All fields
-    operation_type = OperationTypeSerializer()  # All fields
-
-    class Meta:
-        model = Ad
-        fields = ['id', 'neighborhood', 'user', 'property_type', 'operation_type', 'description', 'address',
-                  'total_area', 'built_area', 'rooms', 'bathrooms', 'parking_lots', 'antiquity', 'price', 'zip']
-
-    def create(self, validated_data):
-        """
-        Create and return a new `OperationType` instance, given the validated data.
-        """
-        return Ad.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        """
-        Update and return an existing `OperationType` instance, given the validated data.
-        """
-        instance.name = validated_data.get('name', instance.name)
-        instance.save()
-        return instance
-
-
 class ResourceSerializer(serializers.ModelSerializer):
     @property
     def errors_as_array_object(self):
@@ -295,6 +257,48 @@ class ResourceSerializer(serializers.ModelSerializer):
         Create and return a new `OperationType` instance, given the validated data.
         """
         return Resource.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `OperationType` instance, given the validated data.
+        """
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
+
+
+class AdSerializer(serializers.ModelSerializer):
+    @property
+    def errors_as_array_object(self):
+        """
+        Returns full errors formatted as per requirements
+        """
+        default_errors = self.errors  # default errors dict
+        errors_messages = []
+        counter = 0
+        for field_name, field_errors in default_errors.items():
+            for field_error in field_errors:
+                errors_messages.append({"key": counter, "value": f"{field_name}: {field_error}"})
+                counter += 1
+        return {'errors': errors_messages}
+
+    neighborhood = NeighborhoodSerializer()  # All fields
+    user = UserSerializer()  # All fields
+    property_type = PropertyTypeSerializer()  # All fields
+    operation_type = OperationTypeSerializer()  # All fields
+    resources = ResourceSerializer(source='ad_resources', many=True)
+
+    class Meta:
+        model = Ad
+        fields = ['id', 'neighborhood', 'user', 'property_type', 'operation_type', 'description', 'address',
+                  'total_area', 'built_area', 'rooms', 'bathrooms', 'parking_lots', 'antiquity', 'price', 'zip',
+                  'resources']
+
+    def create(self, validated_data):
+        """
+        Create and return a new `OperationType` instance, given the validated data.
+        """
+        return Ad.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         """

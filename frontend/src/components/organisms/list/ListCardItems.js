@@ -27,10 +27,16 @@ function ListCardItems(props) {
 
     const classes = useStyles();
 
-    const onClickGridAdCard = (ad) => {
+    const onClickGridAdCard = async (ad) => {
+
+        //Search ad by ad ID ( Include resources in the response)
+        const adResponse = await requestGetAdById(ad.id).then(response => {
+            return response.data;
+        });
+
         dispatch({
             type: Constants.APP_CONTEXT_ACTION_SET_AD_OBJECT,
-            payload: ad
+            payload: adResponse
         });
 
         dispatch({

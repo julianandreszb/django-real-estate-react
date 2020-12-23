@@ -29,7 +29,7 @@ function CardViewImageDescription(props) {
         <Card className={classes.card}>
             <CardMedia
                 className={classes.cardMedia}
-                image="https://source.unsplash.com/random"
+                image={props.ad.resources[0].file_path}
                 title="Image title"
             />
             <CardHeader
