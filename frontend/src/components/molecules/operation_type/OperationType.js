@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import {requestGetAllOperationTypes} from './OperationTypeUtils';
 import PropTypes from 'prop-types'
-
+import {AppContext} from "../../app-context";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,9 +16,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function OperationType(props) {
-
+    const [state, dispatch] = useContext(AppContext);
     const [operationTypes, setOperationTypes] = useState([]);
-    const [optionType, setOptionType] = React.useState(1);
 
     useEffect(() => {
 
@@ -34,7 +33,6 @@ function OperationType(props) {
 
 
     const handleChange = (event) => {
-        setOptionType(event.target.value);
         props.handleOnChange(event.target.value)
     };
 
@@ -45,7 +43,7 @@ function OperationType(props) {
                 id="outlined-select-currency"
                 select
                 label="Operation Type"
-                value={optionType}
+                value={state.operationType}
                 onChange={handleChange}
                 // helperText="Please select your option"
                 variant="outlined"

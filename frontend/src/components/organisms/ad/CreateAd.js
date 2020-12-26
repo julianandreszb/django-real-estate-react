@@ -29,7 +29,7 @@ import {requestGetAdById} from "../list/ListCardItemsUtils";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
+        // marginTop: theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -229,9 +229,9 @@ function CreateAd(props) {
 
     return (
         <div className={classes.paper}>
-            <Typography component="h1" variant="h5">
-                Create Ad
-            </Typography>
+            {/*<Typography component="h1" variant="h5">*/}
+            {/*    Create Ad*/}
+            {/*</Typography>*/}
             <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6} lg={3} xl={3}>

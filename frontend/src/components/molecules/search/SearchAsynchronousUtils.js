@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
  *
  * @returns Promise
  */
-async function requestGetAds(requestData, page) {
+async function requestGetAds(requestData, operationTypeId, propertyTypeId, page) {
 
     console.log('requestGetAds.requestData', requestData);
 
@@ -15,9 +15,10 @@ async function requestGetAds(requestData, page) {
         return {};
     }
 
+    //search_ads/<str:search_type>/<int:pk>/<int:operation_type_pk>/<int:property_type_pk>/<int:page>/
     return axios({
         method: 'get',
-        url: `${Constants.URL_API_SEARCH_ADS}/${requestData.search_type.toLowerCase()}/${requestData.id}/${page}`,
+        url: `${Constants.URL_API_SEARCH_ADS}/${requestData.search_type.toLowerCase()}/${requestData.id}/${operationTypeId}/${propertyTypeId}/${page}`,
         data: {},
         headers: {
             'X-CSRFToken': getCookie('csrftoken')

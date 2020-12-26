@@ -1,70 +1,77 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
+import PostAddIcon from '@material-ui/icons/PostAdd';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import SearchIcon from '@material-ui/icons/Search';
+import {AppContext} from "../../app-context";
+import * as Constants from "../../Constants";
+import List from "@material-ui/core/List";
 
-export const mainListItems = (
-  <div>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Integrations" />
-    </ListItem>
-  </div>
-);
+function MainListItems(props) {
+    const [state, dispatch] = useContext(AppContext);
 
-export const secondaryListItems = (
-  <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItem>
-  </div>
-);
+    const handleOnClickSearchAds = () => {
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_DASHBOARD_SUB_COMPONENT,
+            payload: Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS
+        });
+    };
+    const handleOnClickCreateAd = () => {
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_DASHBOARD_SUB_COMPONENT,
+            payload: Constants.DASHBOARD_SUB_COMPONENT_CREATE_AD
+        });
+    };
+
+    return (
+        <List>
+            <div>
+                <ListItem button onClick={handleOnClickSearchAds}>
+                    <ListItemIcon>
+                        <SearchIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Search ADS"/>
+                </ListItem>
+                <ListItem button onClick={handleOnClickCreateAd}>
+                    <ListItemIcon>
+                        <PostAddIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Create AD"/>
+                </ListItem>
+            </div>
+        </List>
+    )
+}
+
+function SecondaryListItems(props) {
+    return (
+        <List>
+            <div>
+                <ListSubheader inset>Saved reports</ListSubheader>
+                <ListItem button>
+                    <ListItemIcon>
+                        <AssignmentIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Current month"/>
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon>
+                        <AssignmentIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Last quarter"/>
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon>
+                        <AssignmentIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Year-end sale"/>
+                </ListItem>
+            </div>
+        </List>
+    )
+}
+
+export {MainListItems, SecondaryListItems}

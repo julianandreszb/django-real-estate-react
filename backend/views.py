@@ -116,12 +116,13 @@ def search_city_neighborhood(request, q):
     return JsonResponse(list_result, safe=False)
 
 
-def search_ads(request, search_type, pk, page):
+def search_ads(request, search_type, pk, operation_type_pk, property_type_pk, page):
     per_page = 9
 
     if search_type == 'neighborhood':
 
-        list_ads = Ad.objects.filter(neighborhood__id__exact=pk)
+        list_ads = Ad.objects.filter(neighborhood__id__exact=pk, operation_type__id__exact=operation_type_pk,
+                                     property_type__id__exact=property_type_pk)
 
         paginator = Paginator(list_ads, per_page)
         page_obj = paginator.page(page)
@@ -136,7 +137,8 @@ def search_ads(request, search_type, pk, page):
 
     elif search_type == 'city':
 
-        list_ads = Ad.objects.filter(neighborhood__city_id__exact=pk)
+        list_ads = Ad.objects.filter(neighborhood__city_id__exact=pk, operation_type__id__exact=operation_type_pk,
+                                     property_type__id__exact=property_type_pk)
 
         paginator = Paginator(list_ads, per_page)
         page_obj = paginator.page(page)

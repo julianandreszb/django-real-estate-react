@@ -47,7 +47,6 @@ function SearchAsynchronous(props) {
                     const responseData = await response.data;
                     console.log('responseData', responseData);
                     setLoading(false);
-                    // setOptions(Object.keys(responseData).map((key) => responseData[key].item[0]));
                     setOptions(Object.keys(responseData).map((key) => responseData[key]));
                 }
             })();
@@ -62,7 +61,7 @@ function SearchAsynchronous(props) {
         <Autocomplete
             id="search-asynchronous"
             freeSolo={true}
-            style={{width: 300}}
+            style={{width: 300, paddingTop: 8, paddingLeft: 8}}
             open={open}
             onOpen={() => {
                 setOpen(true);

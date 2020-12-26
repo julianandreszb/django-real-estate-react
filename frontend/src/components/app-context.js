@@ -38,8 +38,14 @@ const reducer = (state, action) => {
             case Constants.APP_CONTEXT_ACTION_SET_TOKEN:
                 return {...state, token: action.payload};
 
-            // case Constants.APP_CONTEXT_ACTION_SET_AUTOCOMPLETE_OPTION:
-            //     return {...state, autocompleteOption: action.payload};
+            case Constants.APP_CONTEXT_ACTION_SET_CARD_VIEW_IMAGE_INDEX:
+                return {...state, cardViewImageIndex: action.payload};
+
+            case Constants.APP_CONTEXT_ACTION_SET_OPERATION_TYPE:
+                return {...state, operationType: action.payload};
+
+            case Constants.APP_CONTEXT_ACTION_SET_PROPERTY_TYPE:
+                return {...state, propertyType: action.payload};
 
             case Constants.APP_CONTEXT_ACTION_RESET:
                 return init(action.payload);
@@ -79,6 +85,9 @@ const AppContextProvider = props => {
         dataItems: dataItems,
         selectedSearchResult: {},
         adObject: {},
+        cardViewImageIndex: 0,
+        operationType: 1,
+        propertyType: 1,
     };
 
     useEffect(() => {

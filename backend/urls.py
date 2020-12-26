@@ -13,6 +13,6 @@ urlpatterns = [
     # path('user/api-token-auth', obtain_auth_token, name='api_token_auth'),
     path("search_city_neighborhood/<str:q>", views.search_city_neighborhood, name="search_city_neighborhood"),
     path("search_neighborhood/<str:q>", views.search_neighborhood, name="search_neighborhood"),
-    path("search_ads/<str:search_type>/<int:pk>/<int:page>", views.search_ads, name="search_ads"),
+    path("search_ads/<str:search_type>/<int:pk>/<int:operation_type_pk>/<int:property_type_pk>/<int:page>", views.search_ads, name="search_ads"),
     path("ad/<int:pk>", views.search_ad_by_id, name="search_ad_by_id"),
 ]

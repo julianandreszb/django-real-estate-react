@@ -5,7 +5,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -13,7 +12,6 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import {mainListItems, secondaryListItems} from './listItems';
 import Button from "@material-ui/core/Button";
 import * as Constants from "../../Constants";
 import {removeAccessTokenLocalStorage} from "../../Utils";
@@ -36,57 +34,9 @@ import {CardViewSecondaryDescription} from "../../molecules/cards/CardViewSecond
 import {GridCharacteristics} from "../../molecules/GridList/GridCharacteristics";
 import {CreateAd} from "../../organisms/ad/CreateAd";
 import {CreateAdTemplate} from "../../templates/ad/CreateAdTemplate/CreateAdTemplate";
-
-const itemsData = [
-    {
-        img: 'http://127.0.0.1:8000/static/images/2020-12-14_23-51.png',
-        title: 'Breakfast',
-    },
-    {
-        img: 'http://127.0.0.1:8000/media/1546366.jpg',
-        title: 'Burger',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-        title: 'Camera',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-        title: 'Coffee',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-        title: 'Hats',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-        title: 'Honey',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-        title: 'Basketball',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-        title: 'Fern',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-        title: 'Mushrooms',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-        title: 'Tomato basil',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-        title: 'Sea star',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-        title: 'Bike',
-    },
-];
+import {MainListItems, SecondaryListItems} from "./listItems";
+import Alert from "@material-ui/lab/Alert";
+import Container from "@material-ui/core/Container";
 
 const drawerWidth = 240;
 
@@ -172,7 +122,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
     const [state, dispatch] = useContext(AppContext);
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = useState(true);
+    const [showAlertNoResult, setShowAlertNoResult] = useState(false);
     const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
 
     const {list_items, paginator} = state.dataItems;
@@ -180,6 +131,7 @@ export default function Dashboard() {
     console.log('state.dataItems', state.dataItems);
     console.log('state.dashboardSubComponent', state.dashboardSubComponent);
     console.log('state.adObject', state.adObject);
+    console.log('state.operationType', state.operationType);
 
 
     const classes = useStyles();
@@ -219,26 +171,43 @@ export default function Dashboard() {
                 payload: selectedSearchResult
             });
 
-            requestGetAds(selectedSearchResult, 1).then(response => {
+            requestGetAds(selectedSearchResult, state.operationType, state.propertyType, 1).then(response => {
                 setOpenLoadingDialog(false);
                 console.log('handleOnSearchChange.requestGetAds.response.data', response.data);
                 dispatch({
                     type: Constants.APP_CONTEXT_ACTION_SET_DATA_ITEMS,
                     payload: response.data
                 });
+
+                setShowAlertNoResult(!!!response.data.list_items.length)
+
             });
         }
     };
 
     const handleOnPaginationChange = (event, page) => {
         setOpenLoadingDialog(true);
-        requestGetAds(state.selectedSearchResult, page).then(response => {
+        requestGetAds(state.selectedSearchResult, state.operationType, state.propertyType, page).then(response => {
             setOpenLoadingDialog(false);
             console.log('handleOnPaginationChange.requestGetAds.response.data', response.data);
             dispatch({
                 type: Constants.APP_CONTEXT_ACTION_SET_DATA_ITEMS,
                 payload: response.data
             });
+        });
+    };
+
+    const handleOnChangeOperationType = (value) => {
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_OPERATION_TYPE,
+            payload: value
+        });
+    };
+
+    const handleOnChangePropertyType = (value) => {
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_PROPERTY_TYPE,
+            payload: value
         });
     };
 
@@ -287,29 +256,38 @@ export default function Dashboard() {
                     </IconButton>
                 </div>
                 <Divider/>
-                <List>{mainListItems}</List>
+                {<MainListItems/>}
                 <Divider/>
-                <List>{secondaryListItems}</List>
+                {<SecondaryListItems/>}
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
 
                 {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS &&
                 <SearchTemplate
-                    operationTypeSelector={<OperationType handleOnChange={(value) => {
-                        console.log('Dashboard.SearchTemplate.operationTypeSelector.OperationType.handleOnChange')
-                    }}/>}
-                    propertyTypeSelector={<PropertyType handleOnChange={(value) => {
-                        console.log('Dashboard.SearchTemplate.propertyTypeSelector.PropertyType.handleOnChange')
-                    }}/>}
+                    operationTypeSelector={
+                        <OperationType handleOnChange={handleOnChangeOperationType}/>
+                    }
+                    propertyTypeSelector={
+                        <PropertyType handleOnChange={handleOnChangePropertyType}/>
+                    }
                     searchInput={
                         <SearchAsynchronous
                             url={Constants.URL_API_SEARCH_CITY_NEIGHBORHOOD}
                             handleOnChange={handleOnSearchChange}
-                            label={"Search neighborhood or city"}/>
+                            label={"Search by neighborhood or city"}
+                        />
                     }
                 />
                 }
+
+                {showAlertNoResult &&
+                state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS &&
+                <Container maxWidth={false}>
+                    <Alert severity="info">No results were found.</Alert>
+                </Container>
+                }
+
 
                 {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS && !!list_items.length && !!paginator &&
                 <SearchResultTemplate
@@ -331,11 +309,9 @@ export default function Dashboard() {
                 {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_VIEW_AD && state.adObject &&
                 <ViewAdTemplate
                     CardViewImage={
-                        // <CardViewImage img={itemsData[0].img}/>
-                        <CardViewImage img={state.adObject.resources[0].file_path}/>
+                        <CardViewImage itemsData={state.adObject.resources}/>
                     }
                     GridListImageSelector={
-                        // <GridListImageSelector itemsData={itemsData}/>
                         <GridListImageSelector itemsData={state.adObject.resources}/>
                     }
                     CardViewMainDescription={
