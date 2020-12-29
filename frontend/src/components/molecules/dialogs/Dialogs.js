@@ -70,7 +70,56 @@ AlertDialog.propTypes = {
     "dialogContentTextList": PropTypes.arrayOf(PropTypes.object) // Optional
 };
 
+function DeclineConfirmDialog(props) {
+    const {onClose, onDeclineButton, onConfirmButton, open, dialogTitle, dialogContentText, dialogContentTextList} = props;
+
+    const handleClose = () => {
+        onClose();
+    };
+
+    const handleDecline = () => {
+        onDeclineButton();
+    };
+
+    const handleConfirm = () => {
+        onConfirmButton();
+    };
+
+    return (
+        <Dialog open={open} onClose={handleClose} aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description">
+            <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
+            {dialogContentText !== "" && <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    {dialogContentText}
+                </DialogContentText>
+            </DialogContent>}
+            {!!dialogContentTextList && dialogContentTextList.map(item => (
+                <ListItem key={item.key}>
+                    <ListItemText primary={item.value}/>
+                </ListItem>
+            ))}
+            <DialogActions>
+                <Button onClick={handleDecline} color="primary">Decline</Button>
+                <Button onClick={handleConfirm} variant="contained" color="secondary" autoFocus>Confirm</Button>
+            </DialogActions>
+        </Dialog>
+    )
+
+}
+
+DeclineConfirmDialog.propTypes = {
+    "onClose": PropTypes.func.isRequired,
+    "onConfirmButton": PropTypes.func.isRequired,
+    "onDeclineButton": PropTypes.func.isRequired,
+    "open": PropTypes.bool.isRequired,
+    "dialogTitle": PropTypes.string.isRequired,
+    "dialogContentText": PropTypes.string.isRequired,
+    "dialogContentTextList": PropTypes.arrayOf(PropTypes.object) // Optional
+};
+
 export {
     LoadingDialog,
-    AlertDialog
+    AlertDialog,
+    DeclineConfirmDialog
 };

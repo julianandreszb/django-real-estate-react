@@ -26,6 +26,8 @@ export const LOG_IN_WINDOW_NAME = 'logIn';
 export const DASHBOARD_SUB_COMPONENT_VIEW_AD = 'viewAd';
 export const DASHBOARD_SUB_COMPONENT_SEARCH_ADS = 'searchAds';
 export const DASHBOARD_SUB_COMPONENT_CREATE_AD = 'createAd';
+export const DASHBOARD_SUB_COMPONENT_EDIT_AD = 'editAd';
+export const DASHBOARD_SUB_COMPONENT_MY_ADS = 'myAds';
 //endregion
 
 //region API URLS
@@ -40,6 +42,8 @@ export const URL_API_SEARCH_CITY_NEIGHBORHOOD = 'api/search_city_neighborhood';
 export const URL_API_SEARCH_NEIGHBORHOOD = 'api/search_neighborhood';
 export const URL_API_SEARCH_ADS = 'api/search_ads';
 export const URL_API_SEARCH_AD_BY_ID = 'api/ad';
+export const URL_API_DELETE_AD_BY_ID = 'api/delete_ad';
+export const URL_API_MY_ADS = 'api/my_ads';
 
 export const URL_API_REQUEST_ACCESS_TOKEN = 'o/token/';
 export const URL_API_REQUEST_REVOKE_TOKEN = 'o/revoke_token/';

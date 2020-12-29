@@ -25,6 +25,12 @@ function MainListItems(props) {
             payload: Constants.DASHBOARD_SUB_COMPONENT_CREATE_AD
         });
     };
+    const handleOnClickMyAds = () => {
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_DASHBOARD_SUB_COMPONENT,
+            payload: Constants.DASHBOARD_SUB_COMPONENT_MY_ADS
+        });
+    };
 
     return (
         <List>
@@ -40,6 +46,12 @@ function MainListItems(props) {
                         <PostAddIcon/>
                     </ListItemIcon>
                     <ListItemText primary="Create AD"/>
+                </ListItem>
+                <ListItem button onClick={handleOnClickMyAds}>
+                    <ListItemIcon>
+                        <PostAddIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="My ADS"/>
                 </ListItem>
             </div>
         </List>

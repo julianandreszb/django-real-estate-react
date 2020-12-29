@@ -132,3 +132,4 @@ dmypy.json
 /frontend/static/frontend/main.js
 /backend/migrations/
 /frontend/.env
+/media/

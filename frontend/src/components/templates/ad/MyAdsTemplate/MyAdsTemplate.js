@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(4),
     },
     cardGrid: {
-        // paddingTop: theme.spacing(8),
+        paddingTop: theme.spacing(8),
         // paddingBottom: theme.spacing(8),
     },
     card: {
@@ -44,24 +44,24 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function SearchResultTemplate(props) {
+function MyAdsTemplate(props) {
 
     const classes = useStyles();
 
     return (
         <Container className={classes.cardGrid} maxWidth={false}>
             {props.listCardItems}
-            <div className={classes.pagination_container}>
-                {props.pagination}
-            </div>
+            {/*<div className={classes.pagination_container}>*/}
+            {/*    {props.pagination}*/}
+            {/*</div>*/}
         </Container>
 
     );
 }
 
-SearchResultTemplate.propTypes = {
+MyAdsTemplate.propTypes = {
     "listCardItems": PropTypes.element.isRequired,
-    "pagination": PropTypes.element.isRequired
+    // "pagination": PropTypes.element.isRequired
 };
 
-export {SearchResultTemplate}
+export {MyAdsTemplate}

@@ -1,10 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import {requestGetAllPropertyTypes} from './PropertyTypeUtils';
 import PropTypes from "prop-types";
-import {AppContext} from "../../app-context";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -17,8 +16,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PropertyType(props) {
-    const [state, dispatch] = useContext(AppContext);
     const [propertyTypes, setPropertyTypes] = useState([]);
+    const [propertyTypeId, setPropertyTypeId] = useState(props.defaultValue);
 
     useEffect(() => {
 
@@ -34,6 +33,7 @@ function PropertyType(props) {
 
 
     const handleChange = (event) => {
+        setPropertyTypeId(event.target.value);
         props.handleOnChange(event.target.value);
     };
 
@@ -43,7 +43,7 @@ function PropertyType(props) {
                 id="outlined-select-currency"
                 select
                 label="Property Type"
-                value={state.propertyType}
+                value={propertyTypeId}
                 onChange={handleChange}
                 // helperText="Please select your option"
                 variant="outlined"
@@ -59,7 +59,8 @@ function PropertyType(props) {
 }
 
 PropertyType.propTypes = {
-    "handleOnChange": PropTypes.func.isRequired
+    "handleOnChange": PropTypes.func.isRequired,
+    "defaultValue": PropTypes.number.isRequired,
 };
 
 export {PropertyType}

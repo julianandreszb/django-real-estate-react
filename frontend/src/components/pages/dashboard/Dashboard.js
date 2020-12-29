@@ -37,6 +37,10 @@ import {CreateAdTemplate} from "../../templates/ad/CreateAdTemplate/CreateAdTemp
 import {MainListItems, SecondaryListItems} from "./listItems";
 import Alert from "@material-ui/lab/Alert";
 import Container from "@material-ui/core/Container";
+import {MyAdsTemplate} from "../../templates/ad/MyAdsTemplate/MyAdsTemplate";
+import {MyAdsListCardItems} from "../../organisms/list/MyAdsListCardItems";
+import {EditAd} from "../../organisms/ad/EditAd";
+import {EditAdTemplate} from "../../templates/ad/EditAdTemplate/EditAdTemplate";
 
 const drawerWidth = 240;
 
@@ -125,13 +129,15 @@ export default function Dashboard() {
     const [open, setOpen] = useState(true);
     const [showAlertNoResult, setShowAlertNoResult] = useState(false);
     const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
+    const [operationTypeId, setOperationTypeId] = useState(1);
+    const [propertyTypeId, setPropertyTypeId] = useState(1);
 
     const {list_items, paginator} = state.dataItems;
     console.log('state.selectedSearchResult', state.selectedSearchResult);
     console.log('state.dataItems', state.dataItems);
     console.log('state.dashboardSubComponent', state.dashboardSubComponent);
     console.log('state.adObject', state.adObject);
-    console.log('state.operationType', state.operationType);
+    // console.log('state.operationType', state.operationType);
 
 
     const classes = useStyles();
@@ -171,7 +177,7 @@ export default function Dashboard() {
                 payload: selectedSearchResult
             });
 
-            requestGetAds(selectedSearchResult, state.operationType, state.propertyType, 1).then(response => {
+            requestGetAds(selectedSearchResult, operationTypeId, state.propertyType, 1).then(response => {
                 setOpenLoadingDialog(false);
                 console.log('handleOnSearchChange.requestGetAds.response.data', response.data);
                 dispatch({
@@ -187,7 +193,7 @@ export default function Dashboard() {
 
     const handleOnPaginationChange = (event, page) => {
         setOpenLoadingDialog(true);
-        requestGetAds(state.selectedSearchResult, state.operationType, state.propertyType, page).then(response => {
+        requestGetAds(state.selectedSearchResult, operationTypeId, state.propertyType, page).then(response => {
             setOpenLoadingDialog(false);
             console.log('handleOnPaginationChange.requestGetAds.response.data', response.data);
             dispatch({
@@ -198,17 +204,19 @@ export default function Dashboard() {
     };
 
     const handleOnChangeOperationType = (value) => {
-        dispatch({
-            type: Constants.APP_CONTEXT_ACTION_SET_OPERATION_TYPE,
-            payload: value
-        });
+        // dispatch({
+        //     type: Constants.APP_CONTEXT_ACTION_SET_OPERATION_TYPE,
+        //     payload: value
+        // });
+        setOperationTypeId(value);
     };
 
     const handleOnChangePropertyType = (value) => {
-        dispatch({
-            type: Constants.APP_CONTEXT_ACTION_SET_PROPERTY_TYPE,
-            payload: value
-        });
+        // dispatch({
+        //     type: Constants.APP_CONTEXT_ACTION_SET_PROPERTY_TYPE,
+        //     payload: value
+        // });
+        setPropertyTypeId(value);
     };
 
     // const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
@@ -266,10 +274,10 @@ export default function Dashboard() {
                 {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS &&
                 <SearchTemplate
                     operationTypeSelector={
-                        <OperationType handleOnChange={handleOnChangeOperationType}/>
+                        <OperationType handleOnChange={handleOnChangeOperationType} defaultValue={operationTypeId}/>
                     }
                     propertyTypeSelector={
-                        <PropertyType handleOnChange={handleOnChangePropertyType}/>
+                        <PropertyType handleOnChange={handleOnChangePropertyType} defaultValue={propertyTypeId}/>
                     }
                     searchInput={
                         <SearchAsynchronous
@@ -304,6 +312,29 @@ export default function Dashboard() {
                         />
                     }
                 />
+                }
+
+                {/*{state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_MY_ADS && !!list_items.length && !!paginator &&*/}
+                {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_MY_ADS &&
+                <MyAdsTemplate
+                    listCardItems={
+                        <MyAdsListCardItems/>
+                    }
+                    //TODO IMPLEMENT PAGINATION
+                    // pagination={
+                    //     <Pagination
+                    //         count={paginator.num_pages}
+                    //         page={paginator.number}
+                    //         size="large"
+                    //         color="primary"
+                    //         onChange={handleOnPaginationChange}
+                    //     />
+                    // }
+                />
+                }
+
+                {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_EDIT_AD && state.adObject &&
+                <EditAdTemplate EditAd={<EditAd/>}/>
                 }
 
                 {state.dashboardSubComponent === Constants.DASHBOARD_SUB_COMPONENT_VIEW_AD && state.adObject &&

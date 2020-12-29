@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function CreateAd(props) {
+function EditAd(props) {
 
     const [state, dispatch] = useContext(AppContext);
     const [neighborhoodId, setNeighborhoodId] = useState(null);
@@ -236,7 +236,7 @@ function CreateAd(props) {
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
                         <OperationType handleOnChange={(value) => {
-                            console.log('CreateAd.SearchTemplate.operationTypeSelector.OperationType.handleOnChange');
+                            console.log('EditAd.SearchTemplate.operationTypeSelector.OperationType.handleOnChange');
                             setOperationTypeId(value);
                         }} defaultValue={operationTypeId}/>
                     </Grid>
@@ -270,6 +270,7 @@ function CreateAd(props) {
                             inputRef={register}
                             error={!!errors.zip}
                             helperText={errors.zip?.message}
+                            defaultValue={state.adObject.zip}
                         />
                     </Grid>
                     <Grid item xs={12} md={12} lg={6} xl={6}>
@@ -284,6 +285,7 @@ function CreateAd(props) {
                             inputRef={register}
                             error={!!errors.address}
                             helperText={errors.address?.message}
+                            defaultValue={state.adObject.address}
                         />
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
@@ -297,6 +299,7 @@ function CreateAd(props) {
                             inputRef={register}
                             error={!!errors.totalArea}
                             helperText={errors.totalArea?.message}
+                            defaultValue={state.adObject.total_area}
                         />
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
@@ -310,6 +313,7 @@ function CreateAd(props) {
                             inputRef={register}
                             error={!!errors.builtArea}
                             helperText={errors.builtArea?.message}
+                            defaultValue={state.adObject.built_area}
                         />
                     </Grid>
 
@@ -324,6 +328,7 @@ function CreateAd(props) {
                             inputRef={register}
                             error={!!errors.rooms}
                             helperText={errors.rooms?.message}
+                            defaultValue={state.adObject.rooms}
                         />
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
@@ -337,6 +342,7 @@ function CreateAd(props) {
                             inputRef={register}
                             error={!!errors.bathrooms}
                             helperText={errors.bathrooms?.message}
+                            defaultValue={state.adObject.bathrooms}
                         />
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
@@ -350,6 +356,7 @@ function CreateAd(props) {
                             inputRef={register}
                             error={!!errors.parkingLots}
                             helperText={errors.parkingLots?.message}
+                            defaultValue={state.adObject.parking_lots}
                         />
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
@@ -363,6 +370,7 @@ function CreateAd(props) {
                             inputRef={register}
                             error={!!errors.antiquity}
                             helperText={errors.antiquity?.message}
+                            defaultValue={state.adObject.antiquity}
                         />
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
@@ -376,6 +384,7 @@ function CreateAd(props) {
                             inputRef={register}
                             error={!!errors.price}
                             helperText={errors.price?.message}
+                            defaultValue={state.adObject.price}
                         />
                     </Grid>
                     <Grid item xs={12} md={12} lg={12} xl={12}>
@@ -389,6 +398,7 @@ function CreateAd(props) {
                             inputRef={register}
                             error={!!errors.description}
                             helperText={errors.description?.message}
+                            defaultValue={state.adObject.description}
                         />
                     </Grid>
                 </Grid>
@@ -494,10 +504,10 @@ function CreateAd(props) {
     );
 }
 
-CreateAd.propTypes = {
+EditAd.propTypes = {
     // "operationTypeSelector": PropTypes.element.isRequired,
     // "propertyTypeSelector": PropTypes.element.isRequired,
     // "searchNeighborhoodInput": PropTypes.element.isRequired,
 };
 
-export {CreateAd}
+export {EditAd}

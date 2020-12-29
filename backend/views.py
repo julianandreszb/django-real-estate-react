@@ -3,10 +3,11 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view, authentication_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.parsers import JSONParser
+from rest_framework.permissions import IsAuthenticated
 
 from .models import OperationType, PropertyType, City, Neighborhood, Ad, Resource
 from .serializers import UserSerializer, OperationTypeSerializerFrontEnd, \
@@ -170,7 +171,8 @@ def search_neighborhood(request, q):
 
 
 @api_view(['POST'])
-@authentication_classes([TokenAuthentication])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def ad_create(request):
     if request.method == "POST":
 
@@ -237,3 +239,22 @@ def ad_create(request):
         # return JsonResponse({
         #     "ad_id": ad
         # }, status=201)
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def my_ads(request):
+    ad = Ad.objects.filter(user_id__exact=request.user.pk)
+    ad_serializer = AdSerializer(ad, many=True)
+    return JsonResponse(ad_serializer.data, safe=False)
+
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_ad_by_id(request, pk):
+    Resource.objects.filter(ad_id__exact=pk).delete()
+    Ad.objects.get(pk=pk).delete()
+
+    return JsonResponse("Success", safe=False)

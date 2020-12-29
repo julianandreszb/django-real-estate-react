@@ -3,18 +3,18 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import PropTypes from "prop-types";
 
-function CreateAdTemplate(props) {
+function EditAdTemplate(props) {
 
     return (
         <Container component="main" maxWidth={false}>
             <CssBaseline/>
-            {props.createAd}
+            {props.EditAd}
         </Container>
     );
 }
 
-CreateAdTemplate.propTypes = {
-    "createAd": PropTypes.element.isRequired,
+EditAdTemplate.propTypes = {
+    "EditAd": PropTypes.element.isRequired,
 };
 
-export {CreateAdTemplate}
+export {EditAdTemplate}

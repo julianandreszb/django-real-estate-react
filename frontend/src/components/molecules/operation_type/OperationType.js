@@ -1,10 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import {requestGetAllOperationTypes} from './OperationTypeUtils';
 import PropTypes from 'prop-types'
-import {AppContext} from "../../app-context";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function OperationType(props) {
-    const [state, dispatch] = useContext(AppContext);
     const [operationTypes, setOperationTypes] = useState([]);
+    const [operationTypeId, setOperationTypeId] = useState(props.defaultValue);
 
     useEffect(() => {
 
@@ -33,6 +32,7 @@ function OperationType(props) {
 
 
     const handleChange = (event) => {
+        setOperationTypeId(event.target.value);
         props.handleOnChange(event.target.value)
     };
 
@@ -43,7 +43,7 @@ function OperationType(props) {
                 id="outlined-select-currency"
                 select
                 label="Operation Type"
-                value={state.operationType}
+                value={operationTypeId}
                 onChange={handleChange}
                 // helperText="Please select your option"
                 variant="outlined"
@@ -59,7 +59,8 @@ function OperationType(props) {
 }
 
 OperationType.propTypes = {
-    "handleOnChange": PropTypes.func.isRequired
+    "handleOnChange": PropTypes.func.isRequired,
+    "defaultValue": PropTypes.number.isRequired,
 };
 
 export {OperationType}
