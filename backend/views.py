@@ -26,7 +26,16 @@ def user_create(request):
         serializer = UserSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
+            # user = authenticate(username=serializer.data['username'], password=serializer.data['password'])
+            user = authenticate(username=serializer.data['username'], password=data['password'])
+            if user:
+                token, created = Token.objects.get_or_create(user=user)
+                return JsonResponse({
+                    'user': serializer.data,
+                    'access_token': token.key,
+                    'refresh_token': ""
+                }, status=201)
+                # return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors_as_array_object, status=400)
     else:
         return JsonResponse({
@@ -37,10 +46,10 @@ def user_create(request):
 def user_login(request):
     if request.method == "POST":
 
-        if request.user.is_authenticated:
-            return JsonResponse({
-                "error": "Invalid request method."
-            }, status=405)
+        # if request.user.is_authenticated:
+        #     return JsonResponse({
+        #         "error": "Invalid request method."
+        #     }, status=405)
 
         data = JSONParser().parse(request)
         serializer = UserSerializer(data=data)
@@ -277,7 +286,6 @@ def ad_edit(request, pk):
         except:
             image2 = None
 
-
         try:
             image3 = request.FILES['image3']
         except:
@@ -287,7 +295,6 @@ def ad_edit(request, pk):
             image4 = request.FILES['image4']
         except:
             image4 = None
-
 
         try:
             image5 = request.FILES['image5']

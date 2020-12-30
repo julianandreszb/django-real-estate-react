@@ -109,27 +109,40 @@ export default function (props) {
 
         console.log('responseCreateUser', responseCreateUser);
 
-        if (!!responseCreateUser) {
-            const responseAccessToken = await requestAccessToken(dataForm)
-                .then(responseAccessToken => {
-                    console.log('requestAccessToken.responseAccessToken', responseAccessToken);
+        if (!!responseCreateUser && !!responseCreateUser.data) {
 
-                    saveAccessTokenLocalStorage(responseAccessToken.data);
-                    const accessToken = getAccessTokenLocalStorage();
-                    console.log('accessToken', accessToken);
+            let accessToken;
 
-                    return responseAccessToken;
-                }).catch(function (error) {
-                    console.log('requestAccessToken.catch.error', error.response);
-                    handleRequestAccessTokenError(error);
-                    return null;
-                });
+            if (typeof responseCreateUser.data.access_token !== 'undefined' &&
+                typeof responseCreateUser.data.refresh_token !== 'undefined') {
 
-            if (!!responseAccessToken) {
-                const {access_token} = responseAccessToken.data;
+                saveAccessTokenLocalStorage(responseCreateUser.data);
+                accessToken = getAccessTokenLocalStorage();
+            } else {
+
+                accessToken = await requestAccessToken(dataForm)
+                    .then(responseAccessToken => {
+                        console.log('requestAccessToken.responseAccessToken', responseAccessToken);
+
+                        saveAccessTokenLocalStorage(responseAccessToken.data);
+                        const accessToken = getAccessTokenLocalStorage();
+                        console.log('accessToken', accessToken);
+
+                        // return responseAccessToken;
+                        return accessToken;
+                    }).catch(function (error) {
+                        console.log('requestAccessToken.catch.error', error.response);
+                        handleRequestAccessTokenError(error);
+                        return null;
+                    });
+            }
+
+            console.log('SigIn.js.accessToken', accessToken);
+
+            if (!!accessToken) {
                 dispatch({
                     type: Constants.APP_CONTEXT_ACTION_SET_TOKEN,
-                    payload: access_token
+                    payload: accessToken
                 });
                 dispatch({
                     type: Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN,
