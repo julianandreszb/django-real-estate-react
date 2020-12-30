@@ -23,6 +23,9 @@ const reducer = (state, action) => {
             case Constants.APP_CONTEXT_ACTION_SET_DASHBOARD_SUB_COMPONENT:
                 return {...state, dashboardSubComponent: action.payload};
 
+            case Constants.APP_CONTEXT_ACTION_SET_DASHBOARD_SUB_COMPONENT_TITLE:
+                return {...state, dashboardSubComponentTitle: action.payload};
+
             case Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN:
                 return {...state, isLoggedIn: action.payload};
 
@@ -46,6 +49,9 @@ const reducer = (state, action) => {
 
             case Constants.APP_CONTEXT_ACTION_SET_PROPERTY_TYPE:
                 return {...state, propertyType: action.payload};
+
+            case Constants.APP_CONTEXT_ACTION_SET_MY_ADS:
+                return {...state, myAds: action.payload};
 
             case Constants.APP_CONTEXT_ACTION_RESET:
                 return init(action.payload);
@@ -79,7 +85,6 @@ const AppContextProvider = props => {
     const initialValues = {
         currentPage: Constants.HOME_WINDOW_NAME,
         dashboardSubComponent: Constants.DASHBOARD_SUB_COMPONENT_SEARCH_ADS,
-        // dashboardSubComponent: Constants.DASHBOARD_SUB_COMPONENT_CREATE_AD,
         isLoggedIn: !!token,
         token: token,
         dataItems: dataItems,
@@ -88,6 +93,8 @@ const AppContextProvider = props => {
         cardViewImageIndex: 0,
         operationType: 1,
         propertyType: 1,
+        dashboardSubComponentTitle: Constants.DASHBOARD_SUB_COMPONENT_TITLE_SEARCH_ADS,
+        myAds: [],
     };
 
     useEffect(() => {

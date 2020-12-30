@@ -1,3 +1,5 @@
+export let APP_CONTEXT_ACTION_SET_DASHBOARD_SUB_COMPONENT_TITLE = 'SET_DASHBOARD_SUB_COMPONENT_TITLE';
+
 
 export const APP_TITLE_NAME = 'RealState';
 
@@ -14,6 +16,7 @@ export const APP_CONTEXT_ACTION_SET_TOKEN = 'SET_TOKEN';
 export const APP_CONTEXT_ACTION_SET_CARD_VIEW_IMAGE_INDEX = 'SET_CARD_VIEW_IMAGE_INDEX';
 export const APP_CONTEXT_ACTION_SET_OPERATION_TYPE = 'SET_OPERATION_TYPE';
 export let APP_CONTEXT_ACTION_SET_PROPERTY_TYPE = 'SET_PROPERTY_TYPE';
+export let APP_CONTEXT_ACTION_SET_MY_ADS = 'SET_MY_ADS';
 //endregion
 
 //region PAGES COMPONENT NAMES
@@ -30,10 +33,17 @@ export const DASHBOARD_SUB_COMPONENT_EDIT_AD = 'editAd';
 export const DASHBOARD_SUB_COMPONENT_MY_ADS = 'myAds';
 //endregion
 
+//region DASHBOARD SUB-COMPONENT DEFAULT TITLES
+export const DASHBOARD_SUB_COMPONENT_TITLE_SEARCH_ADS = 'Search ADS';
+export const DASHBOARD_SUB_COMPONENT_TITLE_CREATE_AD = 'Create AD';
+export const DASHBOARD_SUB_COMPONENT_TITLE_MY_ADS = 'My ADS';
+//endregion
+
 //region API URLS
 export const URL_API_CREATE_USER = 'api/user/create';
 export const URL_API_LOGIN_USER = 'api/user/login';
 export const URL_API_CREATE_AD = 'api/ad/create';
+export const URL_API_EDIT_AD = 'api/ad/edit';
 // export const URL_API_LOGIN_USER = 'api/user/api-token-auth';
 
 export const URL_API_OPERATION_TYPES = 'api/operation_types';

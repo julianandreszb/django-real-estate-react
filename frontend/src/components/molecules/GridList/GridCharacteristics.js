@@ -94,6 +94,19 @@ function GridCharacteristics(props) {
                                 </Typography>
                             </Grid>
                         </Grid>
+
+                        <Grid item xs container direction="column" spacing={1}>
+                            <Grid item>
+                                <Typography variant="body2" color="textSecondary">
+                                    Address
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="body2" style={{cursor: 'pointer'}}>
+                                    {props.ad.address}
+                                </Typography>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Paper>

@@ -8,7 +8,7 @@ import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 
-import {requestCreateAd} from './CreateAdUtils'
+import {requestCreateAd, requestEditAd} from './CreateAdUtils'
 
 import {TITLE_ALERT_DIALOG_ERROR_CREATING_NEW_USER_TITLE} from "../../Constants";
 import {requestLogIn} from "../../pages/login/LogInUtils";
@@ -26,6 +26,7 @@ import {PropertyType} from "../../molecules/property_type/PropertyType";
 import {SearchAsynchronous} from "../../molecules/search/SearchAsynchronous";
 import {AlertDialog} from "../../molecules/dialogs/Dialogs";
 import {requestGetAdById} from "../list/ListCardItemsUtils";
+import {CardViewEditImageActions} from "../../molecules/cards/CardViewEditImageActions";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 function EditAd(props) {
 
     const [state, dispatch] = useContext(AppContext);
-    const [neighborhoodId, setNeighborhoodId] = useState(null);
+    const [neighborhoodId, setNeighborhoodId] = useState(state.adObject.neighborhood.id);
     const [operationTypeId, setOperationTypeId] = useState(1);
     const [propertyTypeId, setPropertyTypeId] = useState(1);
 
@@ -59,6 +60,12 @@ function EditAd(props) {
     const [alertDialogTitle, setAlertDialogTitle] = useState("");
     const [alertDialogContentText, setAlertDialogContentText] = useState("");
     //endregion
+
+    const [image1IdDeleted, setImage1IdDeleted] = useState('');
+    const [image2IdDeleted, setImage2IdDeleted] = useState('');
+    const [image3IdDeleted, setImage3IdDeleted] = useState('');
+    const [image4IdDeleted, setImage4IdDeleted] = useState('');
+    const [image5IdDeleted, setImage5IdDeleted] = useState('');
 
 
     console.log('state.token', state.token);
@@ -78,15 +85,15 @@ function EditAd(props) {
         .test(
             "fileSize",
             "File too large",
-            (value) => {
-                return value && value[0].size <= 20000000
+            function (value) {
+                return !!value && !!value.length && value[0].size <= 20000000
             }
         )
         .test(
             "type",
             "Unsupported Format",
-            (value) => {
-                return value && SUPPORTED_FORMATS.includes(value[0].type)
+            function (value) {
+                return !!value && !!value.length && SUPPORTED_FORMATS.includes(value[0].type)
             }
         );
     const fileValidationOptional = yup
@@ -94,15 +101,15 @@ function EditAd(props) {
         .test(
             "fileSize",
             "File too large",
-            (value) => {
-                return value && value[0].size <= 20000000
+            function (value) {
+                return !!value && !!value.length && value[0].size <= 20000000
             }
         )
         .test(
             "type",
             "Unsupported Format",
-            (value) => {
-                return value && SUPPORTED_FORMATS.includes(value[0].type)
+            function (value) {
+                return !!value && !!value.length && SUPPORTED_FORMATS.includes(value[0].type)
             }
         );
 
@@ -118,11 +125,11 @@ function EditAd(props) {
         parkingLots: yup.number().required(),
         antiquity: yup.number().required(),
         price: yup.number().required(),
-        image1: fileValidationRequired,
-        image2: fileValidationOptional,
-        image3: fileValidationOptional,
-        image4: fileValidationOptional,
-        image5: fileValidationOptional,
+        // image1: fileValidationRequired,
+        // image2: fileValidationOptional,
+        // image3: fileValidationOptional,
+        // image4: fileValidationOptional,
+        // image5: fileValidationOptional,
     });
     const {register, handleSubmit, errors} = useForm({
         resolver: yupResolver(schema)
@@ -153,8 +160,6 @@ function EditAd(props) {
             return;
         }
 
-        console.log('dataForm.imageOne', dataForm.imageOne);
-
         // Axios interprets this data as MULTI-PART FORM
         const data = new FormData();
         data.append('neighborhood', neighborhoodId);
@@ -168,44 +173,33 @@ function EditAd(props) {
         data.append('bathrooms', dataForm.bathrooms);
         data.append('parking_lots', dataForm.parkingLots);
         data.append('antiquity', dataForm.antiquity);
-        if (!!dataForm.image1) {
-            data.append('image1', dataForm.image1[0]);
-        }
-        if (!!dataForm.image2) {
-            data.append('image2', dataForm.image2[0]);
-        }
-        if (!!dataForm.image3) {
-            data.append('image3', dataForm.image3[0]);
-        }
-        if (!!dataForm.image4) {
-            data.append('image4', dataForm.image4[0]);
-        }
-        if (!!dataForm.image5) {
-            data.append('image5', dataForm.image5[0]);
-        }
         data.append('price', dataForm.price);
         data.append('zip', dataForm.zip);
 
+        data.append('image1IdDeleted', image1IdDeleted);
+        data.append('image2IdDeleted', image2IdDeleted);
+        data.append('image3IdDeleted', image3IdDeleted);
+        data.append('image4IdDeleted', image4IdDeleted);
+        data.append('image5IdDeleted', image5IdDeleted);
 
-        //TODO Using JSON OBJECT
-        // const data = {
-        //     'neighborhood': neighborhoodId,
-        //     'property_type': propertyTypeId,
-        //     'operation_type': operationTypeId,
-        //     'description': dataForm.description,
-        //     'address': dataForm.address,
-        //     'total_area': dataForm.totalArea,
-        //     'built_area': dataForm.builtArea,
-        //     'rooms': dataForm.rooms,
-        //     'bathrooms': dataForm.bathrooms,
-        //     'parking_lots': dataForm.parkingLots,
-        //     'antiquity': dataForm.antiquity,
-        //     // 'file': dataForm.imageOne,
-        //     'price': dataForm.price,
-        //     'zip': dataForm.zip
-        // };
+        if (!!image1IdDeleted && !!dataForm.image1 && !!dataForm.image1.length) {
+            data.append('image1', dataForm.image1[0]);
+        }
+        if (!!image2IdDeleted && !!dataForm.image2 && !!dataForm.image2.length) {
+            data.append('image2', dataForm.image2[0]);
+        }
+        if (!!image3IdDeleted && !!dataForm.image3 && !!dataForm.image3.length) {
+            data.append('image3', dataForm.image3[0]);
+        }
+        if (!!image4IdDeleted && dataForm.image4 && !!dataForm.image4.length) {
+            data.append('image4', dataForm.image4[0]);
+        }
+        if (!!image5IdDeleted && !!dataForm.image5 && !!dataForm.image5.length) {
+            data.append('image5', dataForm.image5[0]);
+        }
 
-        const requestCreateAdResult = await requestCreateAd(data, state.token).then((response) => {
+
+        const requestCreateAdResult = await requestEditAd(state.adObject.id, data, state.token).then((response) => {
             return response.data;
         });
 
@@ -226,6 +220,29 @@ function EditAd(props) {
         });
 
     };
+
+    // const handleDeleteImage = (imageId) => {
+    //
+    //     console.log('handleDeleteImage.imageId', imageId);
+    //
+    //     switch (imageId) {
+    //         case 0:
+    //             setImage1IdDeleted(true);
+    //             break;
+    //         case 1:
+    //             setImage2IdDeleted(true);
+    //             break;
+    //         case 2:
+    //             setImage3IdDeleted(true);
+    //             break;
+    //         case 3:
+    //             setImage4IdDeleted(true);
+    //             break;
+    //         case 4:
+    //             setImage5IdDeleted(true);
+    //             break;
+    //     }
+    // };
 
     return (
         <div className={classes.paper}>
@@ -256,7 +273,7 @@ function EditAd(props) {
                                     setNeighborhoodId(null);
                                 }
                             }}
-                            label={"Search neighborhood"}/>
+                            label={"Search neighborhood"} defaultValue={state.adObject.neighborhood}/>
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
                         <TextField
@@ -404,86 +421,124 @@ function EditAd(props) {
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
-                        <TextField
-                            type="file"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            name="image1"
-                            variant="outlined"
-                            fullWidth
-                            id="image1"
-                            label="Image 1"
-                            inputRef={register}
-                            error={!!errors.image1}
-                            helperText={errors.image1?.message}
-                        />
+                        {!!image1IdDeleted ?
+                            <TextField
+                                type="file"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                name="image1"
+                                variant="outlined"
+                                fullWidth
+                                id="image1"
+                                label="Image 1"
+                                inputRef={register}
+                                error={!!errors.image1}
+                                helperText={errors.image1?.message}
+                            />
+                            :
+                            <CardViewEditImageActions
+                                file_path={state.adObject.resources[0].file_path}
+                                onConfirmDeleteButton={() => setImage1IdDeleted(state.adObject.resources[0].id)}
+                                // onConfirmDeleteButton={() => handleDeleteImage(0)}
+                            />}
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
-                        <TextField
-                            type="file"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            name="image2"
-                            variant="outlined"
-                            fullWidth
-                            id="image2"
-                            label="Image 2"
-                            inputRef={register}
-                            error={!!errors.image2}
-                            helperText={errors.image2?.message}
-                        />
+                        {!!image2IdDeleted ?
+                            <TextField
+                                type="file"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                name="image2"
+                                variant="outlined"
+                                fullWidth
+                                id="image2"
+                                label="Image 2"
+                                inputRef={register}
+                                error={!!errors.image2}
+                                helperText={errors.image2?.message}
+                            />
+                            :
+                            <CardViewEditImageActions
+                                file_path={state.adObject.resources[1].file_path}
+                                // onConfirmDeleteButton={() => handleDeleteImage(1)}
+                                onConfirmDeleteButton={() => setImage2IdDeleted(state.adObject.resources[1].id)}
+                            />}
+
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
-                        <TextField
-                            type="file"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            name="image3"
-                            variant="outlined"
-                            fullWidth
-                            id="image3"
-                            label="Image 3"
-                            inputRef={register}
-                            error={!!errors.image3}
-                            helperText={errors.image3?.message}
-                        />
+                        {!!image3IdDeleted ?
+                            <TextField
+                                type="file"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                name="image3"
+                                variant="outlined"
+                                fullWidth
+                                id="image3"
+                                label="Image 3"
+                                inputRef={register}
+                                error={!!errors.image3}
+                                helperText={errors.image3?.message}
+                            />
+                            :
+                            <CardViewEditImageActions
+                                file_path={state.adObject.resources[2].file_path}
+                                // onConfirmDeleteButton={() => handleDeleteImage(2)}
+                                onConfirmDeleteButton={() => setImage3IdDeleted(state.adObject.resources[2].id)}
+                            />}
+
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
-                        <TextField
-                            type="file"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            name="image4"
-                            variant="outlined"
-                            fullWidth
-                            id="image4"
-                            label="Image 4"
-                            inputRef={register}
-                            error={!!errors.image4}
-                            helperText={errors.image4?.message}
-                        />
+                        {!!image4IdDeleted ?
+                            <TextField
+                                type="file"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                name="image4"
+                                variant="outlined"
+                                fullWidth
+                                id="image4"
+                                label="Image 4"
+                                inputRef={register}
+                                error={!!errors.image4}
+                                helperText={errors.image4?.message}
+                            />
+                            :
+                            <CardViewEditImageActions
+                                file_path={state.adObject.resources[3].file_path}
+                                // onConfirmDeleteButton={() => handleDeleteImage(3)}
+                                onConfirmDeleteButton={() => setImage4IdDeleted(state.adObject.resources[3].id)}
+                            />}
+
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
-                        <TextField
-                            type="file"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            name="image5"
-                            variant="outlined"
-                            fullWidth
-                            id="image5"
-                            label="Image 5"
-                            inputRef={register}
-                            error={!!errors.image5}
-                            helperText={errors.image5?.message}
-                        />
+                        {!!image5IdDeleted ?
+                            <TextField
+                                type="file"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                name="image5"
+                                variant="outlined"
+                                fullWidth
+                                id="image5"
+                                label="Image 5"
+                                inputRef={register}
+                                error={!!errors.image5}
+                                helperText={errors.image5?.message}
+                            />
+                            :
+                            <CardViewEditImageActions
+                                file_path={state.adObject.resources[4].file_path}
+                                // onConfirmDeleteButton={() => handleDeleteImage(4)}
+                                onConfirmDeleteButton={() => setImage5IdDeleted(state.adObject.resources[4].id)}
+                            />}
+
                     </Grid>
-                    <span>{errors.imageOne?.message}</span>
                 </Grid>
                 <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                     Submit

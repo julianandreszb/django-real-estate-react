@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 function PropertyType(props) {
     const [propertyTypes, setPropertyTypes] = useState([]);
-    const [propertyTypeId, setPropertyTypeId] = useState(props.defaultValue);
+    // const [propertyTypeId, setPropertyTypeId] = useState(props.defaultValue);
 
     useEffect(() => {
 
@@ -33,7 +33,7 @@ function PropertyType(props) {
 
 
     const handleChange = (event) => {
-        setPropertyTypeId(event.target.value);
+        // setPropertyTypeId(event.target.value);
         props.handleOnChange(event.target.value);
     };
 
@@ -43,7 +43,8 @@ function PropertyType(props) {
                 id="outlined-select-currency"
                 select
                 label="Property Type"
-                value={propertyTypeId}
+                // value={propertyTypeId}
+                value={props.defaultValue}
                 onChange={handleChange}
                 // helperText="Please select your option"
                 variant="outlined"

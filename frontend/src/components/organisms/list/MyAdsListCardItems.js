@@ -23,7 +23,7 @@ function MyAdsListCardItems(props) {
 
     const [state, dispatch] = useContext(AppContext);
 
-    const [myAdsListItems, setMyAdsListItems] = useState([]);
+    // const [myAdsListItems, setMyAdsListItems] = useState([]);
 
     const loadMyAds = () => {
         const promiseGetMyAds = async () => await requestGetMyAds(state.token);
@@ -32,14 +32,19 @@ function MyAdsListCardItems(props) {
 
             console.log('MyAdsListCardItems.js.MyAdsListCardItems.useEffect.response.data', response.data);
 
-            setMyAdsListItems(response.data);
+            // setMyAdsListItems(response.data);
+
+            dispatch({
+                type: Constants.APP_CONTEXT_ACTION_SET_MY_ADS,
+                payload: response.data
+            });
+
         });
     };
 
     useEffect(() => {
         loadMyAds();
     }, []);
-    // });//Reload always
 
 
     const classes = useStyles();
@@ -64,7 +69,7 @@ function MyAdsListCardItems(props) {
     return (
         <Container className={classes.cardGrid} maxWidth={false}>
             <Grid container spacing={4}>
-                {myAdsListItems.map((ad) => (
+                {state.myAds.map((ad) => (
                     // <Grid item key={ad.id} xs={12} sm={6} md={4} onClick={() => onClickGridAdCard(ad)}>
                     <Grid item key={ad.id} xs={12} sm={6} md={4}>
                         <CardViewImageDescriptionActions ad={ad}/>

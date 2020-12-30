@@ -80,6 +80,14 @@ export default function (props) {
         //TODO
     };
 
+    const onClickGuessUser = (event) => {
+        event.preventDefault();
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_CURRENT_PAGE,
+            payload: Constants.HOME_WINDOW_NAME
+        });
+    };
+
     const onSubmit = async dataForm => {
 
         setOpenLoadingDialog(true);
@@ -231,6 +239,13 @@ export default function (props) {
                         <Grid item>
                             <Link onClick={onClickLogInLink} href="#" variant="body2">
                                 Already have an account? Sign in
+                            </Link>
+                        </Grid>
+                    </Grid>
+                    <Grid container justify="flex-end">
+                        <Grid item>
+                            <Link onClick={onClickGuessUser} href="#" variant="body2">
+                                Use guess user
                             </Link>
                         </Grid>
                     </Grid>

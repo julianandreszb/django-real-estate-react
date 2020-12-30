@@ -170,6 +170,14 @@ export default function (props) {
         });
     };
 
+    const onClickGuessUser = (event) => {
+        event.preventDefault();
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_CURRENT_PAGE,
+            payload: Constants.HOME_WINDOW_NAME
+        });
+    };
+
     return (state.currentPage === LOG_IN_WINDOW_NAME &&
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
@@ -218,6 +226,13 @@ export default function (props) {
                         <Grid item>
                             <Link onClick={onClickSignUpLink} href="#" variant="body2">
                                 Don't have an account yet? Sign Up
+                            </Link>
+                        </Grid>
+                    </Grid>
+                    <Grid container justify="flex-end">
+                        <Grid item>
+                            <Link onClick={onClickGuessUser} href="#" variant="body2">
+                                Use guess user
                             </Link>
                         </Grid>
                     </Grid>

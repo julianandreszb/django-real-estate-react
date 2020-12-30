@@ -20,3 +20,23 @@ export function requestCreateAd(data, token) {
         }
     });
 }
+
+/**
+ *
+ * @param adId
+ * @param data
+ * @param token
+ * @returns {Promise}
+ */
+export function requestEditAd(adId, data, token) {
+
+    return axios({
+        method: 'post',
+        url: `${Constants.URL_API_EDIT_AD}/${adId}`,
+        data: data,
+        headers: {
+            'Authorization': `Token ${token}`,
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    });
+}

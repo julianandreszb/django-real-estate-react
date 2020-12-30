@@ -87,7 +87,7 @@ class Ad(models.Model):
     bathrooms = models.IntegerField()
     parking_lots = models.IntegerField()
     antiquity = models.IntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=20, decimal_places=0)
     zip = models.TextField(max_length=15, blank=True)
 
     def serialize(self):

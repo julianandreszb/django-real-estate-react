@@ -241,6 +241,156 @@ def ad_create(request):
         # }, status=201)
 
 
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def ad_edit(request, pk):
+    if request.method == "POST":
+        ad = Ad.objects.get(pk=pk)
+        # user_id = request.user.pk
+        ad.description = request.POST["description"]
+        ad.address = request.POST["address"]
+        ad.total_area = request.POST["total_area"]
+        ad.built_area = request.POST["built_area"]
+        ad.rooms = request.POST["rooms"]
+        ad.bathrooms = request.POST["bathrooms"]
+        ad.parking_lots = request.POST["parking_lots"]
+        ad.antiquity = request.POST["antiquity"]
+        ad.price = request.POST["price"]
+        ad.zip = request.POST["zip"]
+
+        ad.save()
+
+        ## THIS IS WORKING
+        ## fs = FileSystemStorage(MEDIA_ROOT)
+        ## image1_file = request.FILES['image1']
+        ## filename = fs.save(image1_file.name, image1_file)
+        ## uploaded_file_url = fs.url(filename)
+
+        try:
+            image1 = request.FILES['image1']
+        except:
+            image1 = None
+
+        try:
+            image2 = request.FILES['image2']
+        except:
+            image2 = None
+
+
+        try:
+            image3 = request.FILES['image3']
+        except:
+            image3 = None
+
+        try:
+            image4 = request.FILES['image4']
+        except:
+            image4 = None
+
+
+        try:
+            image5 = request.FILES['image5']
+        except:
+            image5 = None
+
+        try:
+
+            if request.POST["image1IdDeleted"]:
+
+                resource_image_1 = Resource.objects.get(pk=request.POST["image1IdDeleted"])
+
+                if image1:
+                    uploaded_file_url = Utils.save_image_file(image1)
+                    resource_image_1.file_path = uploaded_file_url
+                    resource_image_1.save()
+                else:
+                    resource_image_1.delete()
+
+            elif image1:
+                uploaded_file_url = Utils.save_image_file(image1)
+                resource = Resource(ad_id=pk, file_path=uploaded_file_url, type='img')
+                resource.save()
+
+            # ---------------------
+
+            if request.POST["image2IdDeleted"]:
+
+                resource_image_2 = Resource.objects.get(pk=request.POST["image2IdDeleted"])
+
+                if image2:
+                    uploaded_file_url = Utils.save_image_file(image2)
+                    resource_image_2.file_path = uploaded_file_url
+                    resource_image_2.save()
+                else:
+                    resource_image_2.delete()
+
+            elif image2:
+                uploaded_file_url = Utils.save_image_file(image2)
+                resource = Resource(ad_id=pk, file_path=uploaded_file_url, type='img')
+                resource.save()
+
+            # --------------------
+
+            if request.POST["image3IdDeleted"]:
+
+                resource_image_3 = Resource.objects.get(pk=request.POST["image3IdDeleted"])
+
+                if image3:
+                    uploaded_file_url = Utils.save_image_file(image3)
+                    resource_image_3.file_path = uploaded_file_url
+                    resource_image_3.save()
+                else:
+                    resource_image_3.delete()
+
+            elif image3:
+                uploaded_file_url = Utils.save_image_file(request.FILES['image3'])
+                resource = Resource(ad_id=pk, file_path=uploaded_file_url, type='img')
+                resource.save()
+
+            # --------------------
+
+            if request.POST["image4IdDeleted"]:
+
+                resource_image_4 = Resource.objects.get(pk=request.POST["image4IdDeleted"])
+
+                if image4:
+                    uploaded_file_url = Utils.save_image_file(image4)
+                    resource_image_4.file_path = uploaded_file_url
+                    resource_image_4.save()
+                else:
+                    resource_image_4.delete()
+
+            elif image4:
+                uploaded_file_url = Utils.save_image_file(image4)
+                resource = Resource(ad_id=pk, file_path=uploaded_file_url, type='img')
+                resource.save()
+
+            # --------------------
+
+            if request.POST["image5IdDeleted"]:
+
+                resource_image_5 = Resource.objects.get(pk=request.POST["image5IdDeleted"])
+
+                if image5:
+                    uploaded_file_url = Utils.save_image_file(image5)
+                    resource_image_5.file_path = uploaded_file_url
+                    resource_image_5.save()
+                else:
+                    resource_image_5.delete()
+
+            elif image5:
+                uploaded_file_url = Utils.save_image_file(image5)
+                resource = Resource(ad_id=pk, file_path=uploaded_file_url, type='img')
+                resource.save()
+        except:
+            pass
+
+        ad_serializer = AdSerializer(ad, many=False)
+
+        return JsonResponse(ad_serializer.data, safe=False, status=201)
+
+
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])

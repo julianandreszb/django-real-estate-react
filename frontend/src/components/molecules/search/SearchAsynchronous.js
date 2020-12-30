@@ -12,7 +12,8 @@ let cancel;
 function SearchAsynchronous(props) {
 
     const [state, dispatch] = useContext(AppContext);
-    const [value, setValue] = useState({label: ''});
+    // const [value, setValue] = useState({label: ''});
+    const [value, setValue] = useState(props.defaultValue);
     const [inputValue, setInputValue] = useState('');
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState([]);
@@ -79,6 +80,7 @@ function SearchAsynchronous(props) {
                 event.preventDefault();
                 console.log('onChange.previousValue', value);
                 console.log('onChange.newValue', newValue);
+                console.log('onChange.inputValue', inputValue);
                 props.handleOnChange(newValue);
                 setValue(newValue);
             }}
@@ -110,7 +112,8 @@ function SearchAsynchronous(props) {
 SearchAsynchronous.propTypes = {
     "url": PropTypes.string.isRequired,
     "handleOnChange": PropTypes.func.isRequired,
-    "label" : PropTypes.string.isRequired
+    "label": PropTypes.string.isRequired,
+    "defaultValue": PropTypes.object.isRequired,
 };
 
 export {SearchAsynchronous};

@@ -9,6 +9,7 @@ urlpatterns = [
     path("user/create", views.user_create, name="user_create"),
     # path("r'^user/create/$", views.user_create, name="user_create"),
     path("ad/create", views.ad_create, name="ad_create"),
+    path("ad/edit/<int:pk>", views.ad_edit, name="ad_edit"),
     path("user/login", views.user_login, name="user_login"),
     # path('user/api-token-auth', obtain_auth_token, name='api_token_auth'),
     path("search_city_neighborhood/<str:q>", views.search_city_neighborhood, name="search_city_neighborhood"),

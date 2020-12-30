@@ -53,6 +53,7 @@ function CreateAd(props) {
     const [neighborhoodId, setNeighborhoodId] = useState(null);
     const [operationTypeId, setOperationTypeId] = useState(1);
     const [propertyTypeId, setPropertyTypeId] = useState(1);
+    const [searchAsynchronousDefaultValue] = useState({'label': ''});
 
     //region AlertDialog states
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
@@ -256,7 +257,9 @@ function CreateAd(props) {
                                     setNeighborhoodId(null);
                                 }
                             }}
-                            label={"Search neighborhood"}/>
+                            label={"Search neighborhood"}
+                            defaultValue={searchAsynchronousDefaultValue}
+                        />
                     </Grid>
                     <Grid item xs={12} md={6} lg={3} xl={3}>
                         <TextField

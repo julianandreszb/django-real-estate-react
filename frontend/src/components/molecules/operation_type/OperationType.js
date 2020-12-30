@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 
 function OperationType(props) {
     const [operationTypes, setOperationTypes] = useState([]);
-    const [operationTypeId, setOperationTypeId] = useState(props.defaultValue);
+    // const [operationTypeId, setOperationTypeId] = useState(props.defaultValue);
 
     useEffect(() => {
 
@@ -32,7 +32,7 @@ function OperationType(props) {
 
 
     const handleChange = (event) => {
-        setOperationTypeId(event.target.value);
+        // setOperationTypeId(event.target.value);
         props.handleOnChange(event.target.value)
     };
 
@@ -43,7 +43,8 @@ function OperationType(props) {
                 id="outlined-select-currency"
                 select
                 label="Operation Type"
-                value={operationTypeId}
+                // value={operationTypeId}
+                value={props.defaultValue}
                 onChange={handleChange}
                 // helperText="Please select your option"
                 variant="outlined"

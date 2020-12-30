@@ -4,7 +4,6 @@ import Card from "@material-ui/core/Card";
 import React, {useContext, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import PropTypes from "prop-types";
-import {ListCardItems} from "../../organisms/list/ListCardItems";
 import {AppContext} from "../../app-context";
 
 const useStyles = makeStyles((theme) => ({

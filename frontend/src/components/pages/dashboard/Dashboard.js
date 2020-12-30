@@ -131,6 +131,7 @@ export default function Dashboard() {
     const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
     const [operationTypeId, setOperationTypeId] = useState(1);
     const [propertyTypeId, setPropertyTypeId] = useState(1);
+    const [searchAsynchronousDefaultValue] = useState({'label': ''});
 
     const {list_items, paginator} = state.dataItems;
     console.log('state.selectedSearchResult', state.selectedSearchResult);
@@ -155,11 +156,19 @@ export default function Dashboard() {
         });
     };
     const onClickLogoutButton = () => {
-        removeAccessTokenLocalStorage();
-        dispatch({
-            type: Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN,
-            payload: false
-        });
+        setOpenLoadingDialog(true);
+
+        setTimeout(() => {
+            removeAccessTokenLocalStorage();
+            dispatch({
+                type: Constants.APP_CONTEXT_ACTION_SET_IS_LOGGED_IN,
+                payload: false
+            });
+
+            setOpenLoadingDialog(false);
+
+        }, 1000);
+
     };
 
     const onCloseLoadingDialog = () => {
@@ -167,6 +176,11 @@ export default function Dashboard() {
     };
 
     const handleOnSearchChange = (selectedSearchResult) => {
+
+        dispatch({
+            type: Constants.APP_CONTEXT_ACTION_SET_SELECTED_SEARCH_RESULT,
+            payload: {}
+        });
 
         if (selectedSearchResult) {
 
@@ -177,7 +191,7 @@ export default function Dashboard() {
                 payload: selectedSearchResult
             });
 
-            requestGetAds(selectedSearchResult, operationTypeId, state.propertyType, 1).then(response => {
+            requestGetAds(selectedSearchResult, operationTypeId, propertyTypeId, 1).then(response => {
                 setOpenLoadingDialog(false);
                 console.log('handleOnSearchChange.requestGetAds.response.data', response.data);
                 dispatch({
@@ -193,7 +207,7 @@ export default function Dashboard() {
 
     const handleOnPaginationChange = (event, page) => {
         setOpenLoadingDialog(true);
-        requestGetAds(state.selectedSearchResult, operationTypeId, state.propertyType, page).then(response => {
+        requestGetAds(state.selectedSearchResult, operationTypeId, propertyTypeId, page).then(response => {
             setOpenLoadingDialog(false);
             console.log('handleOnPaginationChange.requestGetAds.response.data', response.data);
             dispatch({
@@ -204,14 +218,14 @@ export default function Dashboard() {
     };
 
     const handleOnChangeOperationType = (value) => {
-        // dispatch({
-        //     type: Constants.APP_CONTEXT_ACTION_SET_OPERATION_TYPE,
-        //     payload: value
-        // });
+
+        console.log('handleOnChangeOperationType.value', value);
+
         setOperationTypeId(value);
     };
 
     const handleOnChangePropertyType = (value) => {
+        console.log('handleOnChangePropertyType.value', value);
         // dispatch({
         //     type: Constants.APP_CONTEXT_ACTION_SET_PROPERTY_TYPE,
         //     payload: value
@@ -241,13 +255,13 @@ export default function Dashboard() {
                         <MenuIcon/>
                     </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Dashboard
+                        {state.dashboardSubComponentTitle}
                     </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <NotificationsIcon/>
-                        </Badge>
-                    </IconButton>
+                    {/*<IconButton color="inherit">*/}
+                    {/*    <Badge badgeContent={4} color="secondary">*/}
+                    {/*        <NotificationsIcon/>*/}
+                    {/*    </Badge>*/}
+                    {/*</IconButton>*/}
                     {buttonLoginLogout}
                 </Toolbar>
             </AppBar>
@@ -265,8 +279,8 @@ export default function Dashboard() {
                 </div>
                 <Divider/>
                 {<MainListItems/>}
-                <Divider/>
-                {<SecondaryListItems/>}
+                {/*<Divider/>*/}
+                {/*{<SecondaryListItems/>}*/}
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
@@ -284,6 +298,7 @@ export default function Dashboard() {
                             url={Constants.URL_API_SEARCH_CITY_NEIGHBORHOOD}
                             handleOnChange={handleOnSearchChange}
                             label={"Search by neighborhood or city"}
+                            defaultValue={searchAsynchronousDefaultValue}
                         />
                     }
                 />

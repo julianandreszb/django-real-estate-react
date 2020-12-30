@@ -11,7 +11,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CardActions from '@material-ui/core/CardActions';
 import {DeclineConfirmDialog} from '../dialogs/Dialogs';
-import {requestDeleteAdById} from '../../organisms/list/MyAdsListCardItemsUtils'
+import {requestDeleteAdById, requestGetMyAds} from '../../organisms/list/MyAdsListCardItemsUtils'
 import {AppContext} from "../../app-context";
 import * as Constants from "../../Constants";
 import {requestGetAdById} from "../../organisms/list/ListCardItemsUtils";
@@ -45,10 +45,24 @@ function CardViewImageDescriptionActions(props) {
         requestDeleteAdByIdPromise.then(response => {
             console.log('CardViewImageDescriptionActions.js,requestDeleteAdById.response.data', response.data);
 
-            dispatch({
-                type: Constants.APP_CONTEXT_ACTION_SET_DASHBOARD_SUB_COMPONENT,
-                payload: Constants.DASHBOARD_SUB_COMPONENT_MY_ADS
+            const promiseGetMyAds = async () => await requestGetMyAds(state.token);
+
+            promiseGetMyAds().then(response => {
+
+                console.log('CardViewImageDescriptionActions.js.onConfirmButton.requestGetMyAds.response.data', response.data);
+
+                dispatch({
+                    type: Constants.APP_CONTEXT_ACTION_SET_MY_ADS,
+                    payload: response.data
+                });
+
+                dispatch({
+                    type: Constants.APP_CONTEXT_ACTION_SET_DASHBOARD_SUB_COMPONENT,
+                    payload: Constants.DASHBOARD_SUB_COMPONENT_MY_ADS
+                });
+
             });
+
         });
     };
     const onDeclineButton = () => {
